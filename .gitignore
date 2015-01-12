@@ -1,0 +1,5 @@
+.idea*
+*.iml
+*.ipr
+*.project
+*.classpath
