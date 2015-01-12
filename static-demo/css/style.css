@@ -1,0 +1,36 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background: url('../images/background.png');
+}
+
+.page-wrap{
+    width: 80%;
+    margin: 15px auto;
+    background: #490000;
+}
+
+header {
+    padding: 0px;
+    margin-top: 15px;
+    background: url('../images/header-top-border-bg.png')repeat-x;
+    border-left: 9px solid #490000;
+    border-right: 9px solid #490000;
+}
+
+header .headerWrapper{
+    background: url('../images/header-bg.jpg') repeat;
+}
+
+header h1{
+    margin-top: -15px;
+}
+
+header .location{
+    position: relative;
+    top: -130px;
+    left:450px;
+}
