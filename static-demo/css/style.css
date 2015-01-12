@@ -1,0 +1,30 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background: url('../images/background.png');
+}
+
+.page-wrap{
+    width: 80%;
+    margin: 15px auto;
+    background: #490000;
+}
+
+header {
+    padding: 0px 15px;
+    margin-top: 15px;
+    background: none;
+}
+
+header h1{
+    margin-top: -15px;
+}
+
+header .location{
+    position: relative;
+    top: -130px;
+    left:450px;
+}
