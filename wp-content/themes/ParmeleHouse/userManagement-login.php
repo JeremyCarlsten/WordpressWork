@@ -1,0 +1,1 @@
+<a href="<?php wp_login_url( get_permalink() ); ?>">Login</a>
