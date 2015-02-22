@@ -33,12 +33,20 @@
         <div class="row">
 
             <aside class="col-md-2 align-right no-gutters">
-                <ul id="main-navigation">
+        <!--         <ul id="main-navigation">
                     <li id="sidebar-header"><h3>Visitor Menu</h3></li>
                     <li><a href="#">Home</a></li>
                     <li><a href="#">Rooms</a></li>
                     <li><a href="#">Contact</a></li>
-                </ul>
+                </ul> -->
+               
+                <?php 
+                    wp_nav_menu(array(
+                        'theme_location' => 'sidebar_navigation', // menu slug from step 1
+                        'container' => false, // 'div' container will not be added
+                        'menu_class' => 'main-navigation', // <ul class="nav"> 
+                    ));
+                ?>
             </aside>
             <article id="main-content" class="col-md-10">
                 <div class="row">
