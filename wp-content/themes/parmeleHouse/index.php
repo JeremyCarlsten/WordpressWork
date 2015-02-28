@@ -138,5 +138,6 @@
     Copyright &copy; 2010-15 Parmele House | <span id="login"><?php wp_loginout(); ?></span>
 </footer>
 </div>
+<? wp_footer(); ?>
 </body>
 </html>
