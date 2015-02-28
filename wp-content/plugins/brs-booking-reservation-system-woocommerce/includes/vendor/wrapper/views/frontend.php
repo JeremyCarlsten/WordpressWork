@@ -1,50 +1,50 @@
 <div class="wrap">
-  <?php  
+    <?php
 
-   do_action('theader');
+    do_action('theader');
 
-   ?>
-
-
-<h2 class="nav-tab-wrapper">
-<?php   foreach ($this->settings as $tab => $section){ 
-
-       $tabname = strtolower(str_replace(" ", "_", $tab));
-  ?>
-       
-            <a href="#<?php  echo $tabname;  ?>" id="<?php echo $tabname; ?>-tab" class="nav-tab"><?php  echo $tab;  ?></a>
+    ?>
 
 
-       
- <?php  } ?>
-</h2>
+    <h2 class="nav-tab-wrapper">
+        <?php   foreach ($this->settings as $tab => $section) {
+
+            $tabname = strtolower(str_replace(" ", "_", $tab));
+            ?>
+
+            <a href="#<?php echo $tabname; ?>" id="<?php echo $tabname; ?>-tab" class="nav-tab"><?php echo $tab; ?></a>
 
 
-<br>
 
-<?php   foreach ($this->settings as $tab => $section){ 
+        <?php } ?>
+    </h2>
 
-       $tabname = strtolower(str_replace(" ", "_", $tab));
-?>
-  
+
+    <br>
+
+    <?php   foreach ($this->settings as $tab => $section) {
+
+        $tabname = strtolower(str_replace(" ", "_", $tab));
+        ?>
+
         <div id="<?php echo $tabname; ?>" class="group">
-  <div class="ui  segment">
+            <div class="ui  segment">
 
 
-       <form method="post" action="options.php">   
-          <?php
-            settings_fields($tabname); 
-            //do_settings_fields( $tabname, $tabname );
-            do_settings_sections( $tabname );
-            submit_button();
-         ?>
-</form>
+                <form method="post" action="options.php">
+                    <?php
+                    settings_fields($tabname);
+                    //do_settings_fields( $tabname, $tabname );
+                    do_settings_sections($tabname);
+                    submit_button();
+                    ?>
+                </form>
+            </div>
+
         </div>
 
-        </div>
 
-
-<?php  }  ?>
+    <?php } ?>
 
 
 
@@ -55,9 +55,9 @@
 
 
 
-<br>
+    <br>
 
-<?php  /*  ?>
+<?php /*  ?>
 
 <h2>Semantic</h2>
 
@@ -173,4 +173,5 @@
 </script>
 
 
-<?php  */  ?>
+<?php  */
+?>

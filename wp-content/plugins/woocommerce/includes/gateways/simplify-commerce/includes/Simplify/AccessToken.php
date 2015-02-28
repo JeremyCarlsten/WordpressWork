@@ -29,9 +29,11 @@
 /**
  * AccessToken - used to manage OAuth access tokens
  */
-class Simplify_AccessToken extends Simplify_Object {
+class Simplify_AccessToken extends Simplify_Object
+{
 
-    public function __construct($hash) {
+    public function __construct($hash)
+    {
         $this->setAll($hash);
     }
 
@@ -42,12 +44,13 @@ class Simplify_AccessToken extends Simplify_Object {
      * @param $authentication - Authentication information to access the API.  If not value is passed the global key Simplify::$publicKey and Simplify::$privateKey are used
      * @return Simplify_AccessToken
      */
-    public static function create($code, $redirect_uri, $authentication = null) {
+    public static function create($code, $redirect_uri, $authentication = null)
+    {
 
         $args = func_get_args();
         $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 3);
 
-        $props = 'code='.$code.'&redirect_uri='.$redirect_uri.'&grant_type=authorization_code';
+        $props = 'code=' . $code . '&redirect_uri=' . $redirect_uri . '&grant_type=authorization_code';
         $resp = Simplify_AccessToken::sendRequest($props, "token", $authentication);
 
         return new Simplify_AccessToken($resp);
@@ -59,17 +62,18 @@ class Simplify_AccessToken extends Simplify_Object {
      * @return Simplify_AccessToken
      * @throws InvalidArgumentException
      */
-    public function refresh($authentication = null) {
+    public function refresh($authentication = null)
+    {
 
         $refresh_token = $this->refresh_token;
-        if (empty($refresh_token)){
+        if (empty($refresh_token)) {
             throw new InvalidArgumentException('Cannot refresh access token; refresh token is invalid');
         }
 
         $args = func_get_args();
         $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 1);
 
-        $props = 'refresh_token='.$refresh_token.'&grant_type=refresh_token';
+        $props = 'refresh_token=' . $refresh_token . '&grant_type=refresh_token';
         $resp = Simplify_AccessToken::sendRequest($props, "token", $authentication);
 
         $this->setAll($resp);
@@ -83,17 +87,18 @@ class Simplify_AccessToken extends Simplify_Object {
      * @return Simplify_AccessToken
      * @throws InvalidArgumentException
      */
-    public function revoke($authentication = null) {
+    public function revoke($authentication = null)
+    {
 
         $access_token = $this->access_token;
-        if (empty($access_token)){
+        if (empty($access_token)) {
             throw new InvalidArgumentException('Cannot revoke access token; access token is invalid');
         }
 
         $args = func_get_args();
         $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
 
-        $props = 'token='.$access_token.'';
+        $props = 'token=' . $access_token . '';
 
         Simplify_AccessToken::sendRequest($props, "revoke", $authentication);
 
@@ -109,9 +114,10 @@ class Simplify_AccessToken extends Simplify_Object {
      * @param string $context
      * @param Simplify_Authentication $authentication
      */
-    private static function sendRequest($props, $context, $authentication){
+    private static function sendRequest($props, $context, $authentication)
+    {
 
-        $url = Simplify_Constants::OAUTH_BASE_URL.'/'.$context;
+        $url = Simplify_Constants::OAUTH_BASE_URL . '/' . $context;
         $http = new Simplify_HTTP();
         $resp = $http->oauthRequest($url, $props, $authentication);
 
@@ -121,7 +127,8 @@ class Simplify_AccessToken extends Simplify_Object {
     /**
      * @ignore
      */
-    static public function getClazz() {
+    static public function getClazz()
+    {
         return "AccessToken";
     }
 

@@ -22,7 +22,7 @@ a.mainlevel {
     background: url(images/fr_menu.png) 100% 0 no-repeat;
 }
 
-div#left ul.menu li {
+div#left #menu-main-nav li {
     background: url(images/fr_menu_visitor.png) 100% 0 no-repeat;
     width: 158px;
 }
@@ -35,11 +35,11 @@ a.mainlevel-otherbtn {
     background: url(images/fr_menu_otherbtn.png) 100% 0 no-repeat;
 }
 
-a.mainlevel:link, a.mainlevel:visited, div#left ul.menu a:link, div#left ul.menu a:visited {
+a.mainlevel:link, a.mainlevel:visited, div#left #menu-main-nav a:link, div#left #menu-main-nav a:visited {
     color: #630000;
 }
 
-div#left ul.menu a:hover {
+div#left #menu-main-nav a:hover {
     color: #000;
 }
 

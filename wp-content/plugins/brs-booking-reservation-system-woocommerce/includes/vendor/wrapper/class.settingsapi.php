@@ -6,438 +6,407 @@
  */
 
 
-
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
-
-class Page{
-
-	protected $slug;
-	protected $hook;
-	protected $page_title;
-	protected $menu_title;
-	protected $capability;
-	protected $icon;
-	protected $markup_top;
-	protected $markup_bottom;
-	protected $type;
-	protected $parent_slug;
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 
-	public function __construct($menu_title , $settings = array() ) {
-		$this->menu_title  = $menu_title;
+class Page
+{
+
+    protected $slug;
+    protected $hook;
+    protected $page_title;
+    protected $menu_title;
+    protected $capability;
+    protected $icon;
+    protected $markup_top;
+    protected $markup_bottom;
+    protected $type;
+    protected $parent_slug;
 
 
-		
-
-		$default = array(
-			'slug' => (isset($settings['slug'])) ? $settings['slug'] : sanitize_title_with_dashes($menu_title),
-			'page_title' => (isset($settings['page_title'])) ? $settings['page_title'] : $menu_title,
-			'capability' => (isset($settings['capability'])) ? $settings['capability'] : 'manage_options',
-			'icon' => (isset($settings['icon'])) ? $settings['icon'] : 'icon-options-general',
-			'type' => 'settings'
-		);
-
-		$settings = array_merge( $default , $settings );
+    public function __construct($menu_title, $settings = array())
+    {
+        $this->menu_title = $menu_title;
 
 
-		foreach ($settings as $key => $value) {
-			if(property_exists($this, $key)){
-				$this->$key = $value;
+        $default = array(
+            'slug' => (isset($settings['slug'])) ? $settings['slug'] : sanitize_title_with_dashes($menu_title),
+            'page_title' => (isset($settings['page_title'])) ? $settings['page_title'] : $menu_title,
+            'capability' => (isset($settings['capability'])) ? $settings['capability'] : 'manage_options',
+            'icon' => (isset($settings['icon'])) ? $settings['icon'] : 'icon-options-general',
+            'type' => 'settings'
+        );
 
-			}
-		}
-
-	}
+        $settings = array_merge($default, $settings);
 
 
-	public function __get($key)
-	{
-		if(property_exists($this, $key)) {
+        foreach ($settings as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
 
-			return $this->$key;
-		}
-	}
+            }
+        }
 
+    }
+
+
+    public function __get($key)
+    {
+        if (property_exists($this, $key)) {
+
+            return $this->$key;
+        }
+    }
 
 
 }
 
 
+class TSettingsApi
+{
+
+    public $page;
+
+    function __construct($page, $settings = array())
+    {
+
+        //path
 
 
-
-class TSettingsApi{
-
-	public $page;
-
-	function __construct( $page , $settings = array() ) {
-
-		//path
+        define('TSAPI', plugin_dir_url(__FILE__));
+        define('TSAPICSS', TSAPI . '/assets/css/');
+        define('TSAPIJS', TSAPI . '/assets/js/');
 
 
-		define('TSAPI',  plugin_dir_url(__FILE__) );
-		define('TSAPICSS', TSAPI .'/assets/css/' );
-		define('TSAPIJS', TSAPI .'/assets/js/' );
+        $this->page = $page;
+        $this->settings = $settings;
+
+        add_action('admin_enqueue_scripts', array($this, 'add_style'));
+        add_action('admin_menu', array($this, 'register_settings_menu'));
+        add_action('admin_init', array($this, 'register_fields'));
 
 
+        global $tada;
 
-		
-		$this->page = $page;
-		$this->settings = $settings;
-
-		add_action( 'admin_enqueue_scripts', array($this,'add_style') );
-		add_action( 'admin_menu' , array($this,'register_settings_menu') );
-		add_action('admin_init', array($this, 'register_fields'));
-
-
-		global $tada;
-
-        if( empty($tada) ){
+        if (empty($tada)) {
             $tada = $this->get_alldata();
 
 
         }
 
 
+    }
 
 
+    public function set_global()
+    {
+        global $tada;
+        $tada = $this->get_alldata();
 
+    }
 
-	}
+    public function get_option_data()
+    {
+        global $tada;
+        $tada = $this->get_alldata();
 
+    }
 
-	public function set_global(){
-		global $tada;
-		$tada = $this->get_alldata();
-		
-	}
 
-	public function get_option_data(){
-		global $tada;
-		$tada = $this->get_alldata();
-		
-	}
+    public function get_alldata()
+    {
 
+        $tab_option = array();
 
+        foreach ($this->settings as $tab => $fields) {
+            $tabname = strtolower(str_replace(" ", "_", $tab));
 
-	public function get_alldata(){
+            if (get_option($tabname)) {
+                $tab_option[] = get_option($tabname);
+            }
 
-		$tab_option = array();
+        }
 
-		foreach ($this->settings as $tab => $fields) {
-		   $tabname = strtolower(str_replace(" ", "_", $tab));
+        return $this->array_flatten($tab_option, array());
+    }
 
-		   if( get_option($tabname) ){
-		  		$tab_option[]= get_option($tabname); 	
-		   }  
 
-		}	
+    public function add_style()
+    {
 
-		return $this->array_flatten($tab_option,array());
-	}
+        wp_enqueue_style('wp-color-picker');
+        wp_enqueue_style('thickbox');
 
 
-	public function add_style(){
+        wp_register_style('font-awesome', TSAPICSS . 'font-awesome.min.css', false, '1.0.0');
 
-        wp_enqueue_style( 'wp-color-picker' );
-        wp_enqueue_style( 'thickbox' );
+        wp_enqueue_style('font-awesome');
 
+        wp_register_style('component', TSAPICSS . 'component.css', false, '1.0.0');
+        wp_enqueue_style('component');
 
-		wp_register_style( 'font-awesome', TSAPICSS. 'font-awesome.min.css', false, '1.0.0' );
+        wp_register_style('custom_wp_admin_css', TSAPICSS . 'style.css', false, '1.0.0');
+        wp_enqueue_style('custom_wp_admin_css');
 
-        wp_enqueue_style( 'font-awesome' );
 
-		wp_register_style( 'component', TSAPICSS. 'component.css', false, '1.0.0' );
-        wp_enqueue_style( 'component' );
+        wp_enqueue_script('jquery');
 
-		wp_register_style( 'custom_wp_admin_css', TSAPICSS. 'style.css', false, '1.0.0' );
-        wp_enqueue_style( 'custom_wp_admin_css' );
 
+        wp_enqueue_script('wp-color-picker');
 
-        wp_enqueue_script( 'jquery' );
+        if (function_exists('wp_enqueue_media')) {
+            wp_enqueue_media();
+        }
 
 
-        wp_enqueue_script( 'wp-color-picker' );
+        wp_register_script('semantic', TSAPIJS . 'semantic.min.js', false, '1.0.0');
+        wp_enqueue_script('semantic');
 
-		if ( function_exists( 'wp_enqueue_media' ) ){
-			wp_enqueue_media();
-		}
+        wp_register_script('cbpFWTabs', TSAPIJS . 'cbpFWTabs.js', false, '1.0.0');
+        wp_enqueue_script('cbpFWTabs');
 
-			
+        wp_register_script('custom_wp_admin_js', TSAPIJS . 'script.js', false, '1.0.0');
+        wp_enqueue_script('custom_wp_admin_js');
 
+    }
 
-        wp_register_script( 'semantic', TSAPIJS. 'semantic.min.js', false, '1.0.0' );
-        wp_enqueue_script( 'semantic' );
 
-        wp_register_script( 'cbpFWTabs', TSAPIJS. 'cbpFWTabs.js', false, '1.0.0' );
-        wp_enqueue_script( 'cbpFWTabs' );
+    public function register_fields()
+    {
 
-        wp_register_script( 'custom_wp_admin_js', TSAPIJS. 'script.js', false, '1.0.0' );
-        wp_enqueue_script( 'custom_wp_admin_js' );
+        foreach ($this->settings as $tab => $section) {
 
-	}
+            $tabname = strtolower(str_replace(" ", "_", $tab));
+            add_settings_section($tabname, $tab, array($this, 'callback_funn'), $tabname);
 
 
-	public function register_fields()
-	{
+            foreach ($section as $key => $value) {
+                foreach ($value as $options) {
 
-		foreach ($this->settings as $tab => $section) {
+                    $args = array(
+                        'id' => $options['name'],
+                        'desc' => isset($options['desc']) ? $options['desc'] : '',
+                        'name' => $options['label'],
+                        'section' => $tabname,
+                        'size' => isset($options['size']) ? $options['size'] : null,
+                        'options' => isset($options['options']) ? $options['options'] : '',
+                        'std' => isset($options['default']) ? $options['default'] : '',
+                        'type' => $options['type'],
+                        'sanitize_callback' => isset($options['sanitize_callback']) ? $options['sanitize_callback'] : '',
+                    );
 
-			$tabname = strtolower(str_replace(" ", "_", $tab));
-     		add_settings_section( $tabname, $tab, array($this,'callback_funn'), $tabname  );
 
+                    // 	add_settings_field($tabname . '[' . $options['name'] . ']', $options['label'], array( $this, 'callback_' . $options['type'] ), $tabname , $tabname, $args );
 
-			foreach ($section as $key => $value) {
-				foreach ($value as $options) {
+                    add_settings_field($tabname . '[' . $options['name'] . ']', $options['label'], array($this, 'add_fields'), $tabname, $tabname, $args);
+                }
+            }
 
-  				$args = array(
-                    'id' => $options['name'],
-                    'desc' => isset( $options['desc'] ) ? $options['desc'] : '',
-                    'name' => $options['label'],
-                    'section' => $tabname,
-                    'size' => isset( $options['size'] ) ? $options['size'] : null,
-                    'options' => isset( $options['options'] ) ? $options['options'] : '',
-                    'std' => isset( $options['default'] ) ? $options['default'] : '',
-                    'type'=> $options['type'],
-                    'sanitize_callback' => isset( $options['sanitize_callback'] ) ? $options['sanitize_callback'] : '',
-                );
 
-  				
+            register_setting($tabname, $tabname, array($this, 'sanitize_options'));
+        }
 
-				// 	add_settings_field($tabname . '[' . $options['name'] . ']', $options['label'], array( $this, 'callback_' . $options['type'] ), $tabname , $tabname, $args );
 
-					add_settings_field($tabname . '[' . $options['name'] . ']', $options['label'], array( $this, 'add_fields' ), $tabname , $tabname, $args );
-				}
-			}
+    }
 
 
-			
+    public function add_fields($args = array())
+    {
 
-			register_setting( $tabname, $tabname , array($this,'sanitize_options'));
-		}
+        extract($args);
 
 
+        $value = esc_attr($this->get_option($id, $section, $std));
 
+        $uname = $section . '[' . $id . ']';
 
-	}
+        switch ($type) {
 
+            case 'heading':
+                echo '</td></tr><tr valign="top"><td colspan="2"><h4>' . $desc . '</h4>';
+                break;
 
-	public function add_fields($args = array()){
 
-		extract($args);
+            case 'checkbox':
 
+                echo '<input class="checkbox" type="checkbox"  id="' . $section . '[' . $id . ']" name="' . $section . '[' . $id . ']"   value="1" ' . checked($value, 1, false) . ' /> <label for="' . $id . '">' . $desc . '</label>';
 
-		$value = esc_attr( $this->get_option( $id, $section, $std ) );
+                break;
 
-		$uname = $section.'['.$id.']';
-		
-		switch ( $type ) {
-			
-			case 'heading':
-				echo '</td></tr><tr valign="top"><td colspan="2"><h4>' . $desc . '</h4>';
-				break;
 
+            case 'select':
+                echo '<select class="select"  id="' . $section . '[' . $id . ']" name="' . $section . '[' . $id . ']" >';
 
+                foreach ($options as $key => $label) {
+                    echo '<option value="' . esc_attr($key) . '"' . selected($value, $key, false) . '>' . $label . '</option>';
+                }
+                echo '</select>';
 
+                if ($desc != '')
+                    echo '<br /><span class="description">' . $desc . '</span>';
 
-			
-			case 'checkbox':
-				
-				echo '<input class="checkbox" type="checkbox"  id="'.$section.'[' . $id . ']" name="'.$section.'[' . $id . ']"   value="1" ' . checked( $value, 1, false ) . ' /> <label for="' . $id . '">' . $desc . '</label>';
-				
-				break;
+                break;
 
 
+            case 'radio':
 
+                $i = 0;
+                foreach ($options as $key => $label) {
+                    echo '<input class="radio" type="radio" id="' . $section . '[' . $id . '][' . $key . ']" name="' . $section . '[' . $id . ']"   value="' . esc_attr($key) . '" ' . checked($value, $key, false) . '> <label for="' . $section . '[' . $id . '][' . $key . ']" >' . $label . '</label>';
+                    if ($i < count($options) - 1)
+                        echo '<br /> <br/>';
+                    $i++;
+                }
 
-			
-			case 'select':
-				echo '<select class="select"  id="'.$section.'[' . $id . ']" name="'.$section.'[' . $id . ']" >';
-				
-				 foreach ( $options as $key => $label ) {
-					echo '<option value="' . esc_attr( $key ) . '"' . selected( $value, $key, false ) . '>' . $label . '</option>';
-					}
-				echo '</select>';
-				
-				if ( $desc != '' )
-					echo '<br /><span class="description">' . $desc . '</span>';
-				
-				break;
+                if ($desc != '')
+                    echo '<br /><span class="description">' . $desc . '</span>';
 
+                break;
 
 
+            case 'textarea':
 
 
-			
-			case 'radio':
+                echo '<textarea class=""  id="' . $section . '[' . $id . ']" name="' . $section . '[' . $id . ']"    placeholder="' . $std . '" rows="5" cols="30">' . esc_attr($value) . '</textarea>';
 
-				$i = 0;
-				foreach ( $options as $key => $label ) {
-					echo '<input class="radio" type="radio" id="'.$section.'['. $id .']['.$key.']" name="'.$section.'[' . $id . ']"   value="' . esc_attr( $key ) . '" ' . checked( $value, $key, false ) . '> <label for="'.$section.'[' . $id . ']['.$key.']" >' . $label . '</label>';
-					if ( $i < count( $options ) - 1 )
-						echo '<br /> <br/>';
-					$i++;
-				}
-				
-				if ( $desc != '' )
-					echo '<br /><span class="description">' . $desc . '</span>';
-				
-				break;
+                if ($desc != '')
+                    echo '<br /><span class="description">' . $desc . '</span>';
 
+                break;
 
 
+            case 'color':
 
 
-			
-			case 'textarea':
+                echo '<input class="regeular-text wp-color-picker-field" type="text"   id="' . $section . '[' . $id . ']" name="' . $section . '[' . $id . ']"  value="' . esc_attr($value) . '"  /> ';
 
+                if ($desc != '')
+                    echo '<br /><span class="description">' . $desc . '</span>';
 
-				echo '<textarea class=""  id="'.$section.'[' . $id . ']" name="'.$section.'[' . $id . ']"    placeholder="' . $std . '" rows="5" cols="30">' . esc_attr( $value ) . '</textarea>';
-				
-				if ( $desc != '' )
-					echo '<br /><span class="description">' . $desc . '</span>';
-				
-				break;
+                break;
 
 
+            case 'editor':
 
-			case 'color':
+                echo '<div>';
 
+                wp_editor($value, $section . '[' . $id . ']', array('tinymce' => true, 'textarea_rows' => ''));
 
-				
-				echo '<input class="regeular-text wp-color-picker-field" type="text"   id="'.$section.'[' . $id . ']" name="'.$section.'[' . $id . ']"  value="'.esc_attr( $value ).'"  /> ';
+                echo '</div>';
 
-				if ( $desc != '' )
-					echo '<br /><span class="description">' . $desc . '</span>';
-				
-				break;
+                if ($desc != '')
+                    echo '<br /><span class="description">' . $desc . '</span>';
+                break;
+                break;
 
 
-		   case 'editor':
+            case 'password':
 
-		        echo '<div>';
 
-		        wp_editor( $value, $section.'['.$id.']', array( 'tinymce' =>true, 'textarea_rows' => '' ) );
+                echo '<input class="regular-text" type="password"  id="' . $section . '[' . $id . ']" name="' . $section . '[' . $id . ']"  value="' . esc_attr($value) . '" />';
 
-		        echo '</div>';
+                if ($desc != '')
+                    echo '<br /><span class="description">' . $desc . '</span>';
 
-				if ( $desc != '' )
-					echo '<br /><span class="description">' . $desc . '</span>';				
-				break;
-		   	    break;
+                break;
 
 
+            case 'page':
 
-			
-			case 'password':
+                $s = $section . '[' . $id . ']';
+                $output = wp_dropdown_pages(array('name' => $s, 'echo' => 0,
+                    'selected' => $value, 'show_option_none ' => ''));
+                echo $output;
 
+                break;
 
-				echo '<input class="regular-text" type="password"  id="'.$section.'[' . $id . ']" name="'.$section.'[' . $id . ']"  value="' .esc_attr( $value ). '" />';
-				
-				if ( $desc != '' )
-					echo '<br /><span class="description">' . $desc . '</span>';
-				
-				break;
-			
 
-			case 'page':
+            case 'category':
 
-				$s = $section.'['.$id.']';
-				$output = wp_dropdown_pages( array( 'name' => $s, 'echo' => 0, 
-					'selected' => $value ,'show_option_none '=>'' ) );
-				echo $output;
+                $s = $section . '[' . $id . ']';
+                $output = wp_dropdown_categories(array('name' => $s, 'echo' => 0,
+                    'selected' => $value));
+                echo $output;
 
-			break;
+                break;
 
+            case 'media':
 
-			case 'category':
+                $display = "";
+                if (empty($value)) {
+                    $display = 'none;';
+                }
 
-				$s = $section.'['.$id.']';
-				$output = wp_dropdown_categories( array('name' => $s, 'echo' => 0, 
-					'selected' => $value ) );
-				echo $output;
+                echo '<div class="uploader">';
+                echo '<input type="text" name="' . $uname . '" class="' . $id . '" value="' . $value . '" />';
+                echo '<button class="upload_image_button button" style="margin-left:5px;" ref="' . $id . '" name="' . $uname . '_button" id="' . $uname . '_button">Upload</button>';
+                echo '<button class="cancel button cancel_' . $id . '" ref="' . $id . '" style="margin-left:5px;display:' . $display . ' " >Cancel</button>';
 
-			break;
+                echo '<br/><br/><img class="' . $id . '" src="' . $value . '"  style="border:5px solid #ccc; width:300px; display:' . $display . '"/>';
 
-			case 'media':
+                echo '</div>';
 
-				$display = "";
-				if(empty($value)){
-					$display = 'none;';
-				} 
+                break;
 
-				echo '<div class="uploader">';
-				echo '<input type="text" name="'.$uname.'" class="'.$id.'" value="'.$value.'" />';
-				echo '<button class="upload_image_button button" style="margin-left:5px;" ref="'.$id.'" name="'.$uname.'_button" id="'.$uname.'_button">Upload</button>';
-				echo '<button class="cancel button cancel_'.$id.'" ref="'.$id.'" style="margin-left:5px;display:'.$display.' " >Cancel</button>';
-				
-            	echo '<br/><br/><img class="'.$id.'" src="'.$value.'"  style="border:5px solid #ccc; width:300px; display:'.$display.'"/>';
-		
-				echo '</div>';
 
-			break ;
+            case 'repeat_text':
 
 
-			case 'repeat_text':
+                $counter = 0;
 
+                $output = '<div class="of-repeat-loop">';
 
+                if (is_array($value)) foreach ((array)$value as $item_value) {
 
-					 $counter = 0;
-					 
-						$output = '<div class="of-repeat-loop">';
-					 
-						if( is_array( $value ) ) foreach ( (array)$value as $item_value ){
-					 
-							$output .= '<div class="of-repeat-group">';
-							$output .= '<input class="of-input" name="' . esc_attr( $uname. '['.$counter.']' ) . '" type="text" value="' . esc_attr( $item_value ) . '" />';
-							$output .= '<button class="dodelete button icon delete">'. __('Remove') .'</button>';
-					 
-							$output .= '</div><!--.of-repeat-group-->';
-					 
-							$counter++;
-						}
-					 
-						$output .= '<div class="of-repeat-group to-copy">';
-						$output .= '<input class="of-input" data-rel="' . esc_attr( $uname ) . '" type="text" value="" />';
-						$output .= '<button class="dodelete button icon delete">'. __('Remove') .'</button>';
-						$output .= '</div><!--.of-repeat-group-->';
-					 
-					 
-						$output .= '<button class="docopy button icon add">Add</button>';
-					 
-						$output .= '</div><!--.of-repeat-loop-->';
- 
+                    $output .= '<div class="of-repeat-group">';
+                    $output .= '<input class="of-input" name="' . esc_attr($uname . '[' . $counter . ']') . '" type="text" value="' . esc_attr($item_value) . '" />';
+                    $output .= '<button class="dodelete button icon delete">' . __('Remove') . '</button>';
 
-    			echo $output;
+                    $output .= '</div><!--.of-repeat-group-->';
 
+                    $counter++;
+                }
 
-			break;
+                $output .= '<div class="of-repeat-group to-copy">';
+                $output .= '<input class="of-input" data-rel="' . esc_attr($uname) . '" type="text" value="" />';
+                $output .= '<button class="dodelete button icon delete">' . __('Remove') . '</button>';
+                $output .= '</div><!--.of-repeat-group-->';
 
 
-			
-			case 'text':
-			default:
-		 		echo '<input class="regular-text" type="text" id="'.$section.'[' . $id . ']" name="'.$section.'[' . $id . ']" placeholder="' . $std . '" value="' . esc_attr( $value ) . '" />';
-		 		
-		 		if ( $desc != '' )
-		 			echo '<br /><span class="description">' . $desc . '</span>';
-		 		
-		 		break;
-		 	
-		}
+                $output .= '<button class="docopy button icon add">Add</button>';
 
+                $output .= '</div><!--.of-repeat-loop-->';
 
-	}
+
+                echo $output;
+
+
+                break;
+
+
+            case 'text':
+            default:
+                echo '<input class="regular-text" type="text" id="' . $section . '[' . $id . ']" name="' . $section . '[' . $id . ']" placeholder="' . $std . '" value="' . esc_attr($value) . '" />';
+
+                if ($desc != '')
+                    echo '<br /><span class="description">' . $desc . '</span>';
+
+                break;
+
+        }
+
+
+    }
 
 
     /**
      * Sanitize callback for Settings API
      */
-    function sanitize_options( $options ) {
+    function sanitize_options($options)
+    {
 
 
-        foreach( $options as $option_slug => $option_value ) {
+        foreach ($options as $option_slug => $option_value) {
             // $sanitize_callback = $this->get_sanitize_callback( $option_slug );
 
             // // If callback is set, call it
@@ -447,18 +416,14 @@ class TSettingsApi{
             // }
 
             // Treat everything that's not an array as a string
-            if ( !is_array( $option_value ) ) {
-                $options[ $option_slug ] = sanitize_text_field( $option_value );
+            if (!is_array($option_value)) {
+                $options[$option_slug] = sanitize_text_field($option_value);
                 continue;
             }
 
-		    if( is_array( $option_value ) ){
-		    	$options[ $option_slug ]  = array_map( 'sanitize_text_field', $option_value);
-		    }
-		        
-
-
-
+            if (is_array($option_value)) {
+                $options[$option_slug] = array_map('sanitize_text_field', $option_value);
+            }
 
 
         }
@@ -466,33 +431,30 @@ class TSettingsApi{
     }
 
 
-	function something($input){
+    function something($input)
+    {
 
-	}
-
-
-
+    }
 
 
-	public function callback_funn($arg){
+    public function callback_funn($arg)
+    {
 
 
-	  // echo "section intro text here";
-	  // echo "<p>id: $arg[id]</p>\n";             // id: eg_setting_section
-	  // echo "<p>title: $arg[title]</p>\n";       // title: Example settings section in reading
-	 
-
-	}
+        // echo "section intro text here";
+        // echo "<p>id: $arg[id]</p>\n";             // id: eg_setting_section
+        // echo "<p>title: $arg[title]</p>\n";       // title: Example settings section in reading
 
 
+    }
 
 
+    function get_option($option, $section, $default = '')
+    {
 
-    function get_option( $option, $section, $default = '' ) {
+        $options = get_option($section);
 
-        $options = get_option( $section );
-
-        if ( isset( $options[$option] ) ) {
+        if (isset($options[$option])) {
             return $options[$option];
         }
 
@@ -500,56 +462,53 @@ class TSettingsApi{
     }
 
 
+    public function register_settings_menu()
+    {
+
+        switch ($this->page->type) {
+
+            case 'menu':
+                add_menu_page($this->page->title, $this->page->menu_title, $this->page->capability, $this->page->slug, array($this, 'render'));
+                break;
+
+            case 'submenu':
+                add_submenu_page($this->page->parent_slug, $this->page->title, $this->page->menu_title, $this->page->capability, $this->page->slug, array($this, 'render'));
+                break;
 
 
-	public function register_settings_menu(){
+            case 'settings':
+                add_options_page($this->page->title, $this->page->menu_title, $this->page->capability, $this->page->slug, array($this, 'render'));
+                break;
 
-		switch($this->page->type) {
-
-			case 'menu':
-				add_menu_page( $this->page->title, $this->page->menu_title, $this->page->capability, $this->page->slug, array($this, 'render') );
-				break;
-
-			case 'submenu':
-				add_submenu_page( $this->page->parent_slug, $this->page->title, $this->page->menu_title, $this->page->capability, $this->page->slug, array($this, 'render') );
-				break;
+            default:
+                add_theme_page($this->page->title, $this->page->menu_title, $this->page->capability, $this->page->slug, array($this, 'render'));
+                break;
+        }
 
 
-			case 'settings':
-				add_options_page( $this->page->title, $this->page->menu_title, $this->page->capability, $this->page->slug, array($this, 'render') );
-				break;
+    }
 
-			default:
-				add_theme_page( $this->page->title, $this->page->menu_title, $this->page->capability, $this->page->slug, array($this, 'render') );
-				break;
-		}
+    public function array_flatten($array, $return)
+    {
 
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $return = $this->array_flatten($value, $return);
+            } elseif ($value) {
+                $return[$key] = $value;
+            }
+        }
+        return $return;
 
-	}
-
-	public function array_flatten($array,$return){
-
-	   foreach($array as $key => $value){
-	    if(is_array($value))
-	    {
-	      $return = $this->array_flatten($value,$return);
-	    }
-	    elseif($value)
-	    {
-	      $return[$key] = $value;
-	    }
-	  }
-	  return $return;
-
-	}
+    }
 
 
-	public function render(){
+    public function render()
+    {
 
-	   	include_once('views/frontend.php' );
+        include_once('views/frontend.php');
 
-	}
-
+    }
 
 
 }

@@ -1,27 +1,26 @@
 <?php
 
-if( ! defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH')) exit;
 
 class Cuztom_Accordion
 {
-	var $id;
-	var $meta_type;
-	var $tabs = array();
+    var $id;
+    var $meta_type;
+    var $tabs = array();
 
-	function __construct( $id )
-	{
-		$this->id 	= $id;
-	}
+    function __construct($id)
+    {
+        $this->id = $id;
+    }
 
-	function output( $post )
-	{
-		$tabs 	= $this->tabs;
+    function output($post)
+    {
+        $tabs = $this->tabs;
 
-		echo '<div class="js-cuztom-accordion">';
-			foreach( $tabs as $title => $tab )
-			{
-				$tab->output( $post, 'accordion' );
-			}
-		echo '</div>';
-	}
+        echo '<div class="js-cuztom-accordion">';
+        foreach ($tabs as $title => $tab) {
+            $tab->output($post, 'accordion');
+        }
+        echo '</div>';
+    }
 }

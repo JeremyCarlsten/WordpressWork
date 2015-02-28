@@ -1,7 +1,7 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if (!defined('ABSPATH')) {
+    exit;
 }
 
 /**
@@ -13,63 +13,67 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @version  2.3.0
  * @extends  WC_Widget
  */
-class WC_Widget_Product_Tag_Cloud extends WC_Widget {
+class WC_Widget_Product_Tag_Cloud extends WC_Widget
+{
 
-	/**
-	 * Constructor
-	 */
-	public function __construct() {
-		$this->widget_cssclass    = 'woocommerce widget_product_tag_cloud';
-		$this->widget_description = __( 'Your most used product tags in cloud format.', 'woocommerce' );
-		$this->widget_id          = 'woocommerce_product_tag_cloud';
-		$this->widget_name        = __( 'WooCommerce Product Tags', 'woocommerce' );
-		$this->settings           = array(
-			'title'  => array(
-				'type'  => 'text',
-				'std'   => __( 'Product Tags', 'woocommerce' ),
-				'label' => __( 'Title', 'woocommerce' )
-			)
-		);
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->widget_cssclass = 'woocommerce widget_product_tag_cloud';
+        $this->widget_description = __('Your most used product tags in cloud format.', 'woocommerce');
+        $this->widget_id = 'woocommerce_product_tag_cloud';
+        $this->widget_name = __('WooCommerce Product Tags', 'woocommerce');
+        $this->settings = array(
+            'title' => array(
+                'type' => 'text',
+                'std' => __('Product Tags', 'woocommerce'),
+                'label' => __('Title', 'woocommerce')
+            )
+        );
 
-		parent::__construct();
-	}
+        parent::__construct();
+    }
 
-	/**
-	 * widget function.
-	 *
-	 * @see WP_Widget
-	 *
-	 * @param array $args
-	 * @param array $instance
-	 *
-	 * @return void
-	 */
-	public function widget( $args, $instance ) {
-		$current_taxonomy = $this->_get_current_taxonomy( $instance );
+    /**
+     * widget function.
+     *
+     * @see WP_Widget
+     *
+     * @param array $args
+     * @param array $instance
+     *
+     * @return void
+     */
+    public function widget($args, $instance)
+    {
+        $current_taxonomy = $this->_get_current_taxonomy($instance);
 
-		if ( empty( $instance['title'] ) ) {
-			$taxonomy = get_taxonomy( $current_taxonomy );
-			$instance['title'] = $taxonomy->labels->name;
-		}
+        if (empty($instance['title'])) {
+            $taxonomy = get_taxonomy($current_taxonomy);
+            $instance['title'] = $taxonomy->labels->name;
+        }
 
-		$this->widget_start( $args, $instance );
+        $this->widget_start($args, $instance);
 
-		echo '<div class="tagcloud">';
+        echo '<div class="tagcloud">';
 
-		wp_tag_cloud( apply_filters( 'woocommerce_product_tag_cloud_widget_args', array( 'taxonomy' => $current_taxonomy ) ) );
+        wp_tag_cloud(apply_filters('woocommerce_product_tag_cloud_widget_args', array('taxonomy' => $current_taxonomy)));
 
-		echo '</div>';
+        echo '</div>';
 
-		$this->widget_end( $args );
-	}
+        $this->widget_end($args);
+    }
 
-	/**
-	 * Return the taxonomy being displayed
-	 *
-	 * @param  object $instance
-	 * @return string
-	 */
-	public function _get_current_taxonomy( $instance ) {
-		return 'product_tag';
-	}
+    /**
+     * Return the taxonomy being displayed
+     *
+     * @param  object $instance
+     * @return string
+     */
+    public function _get_current_taxonomy($instance)
+    {
+        return 'product_tag';
+    }
 }
