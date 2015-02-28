@@ -1,1 +1,0 @@
-<a href="<? echo wp_logout_url( get_permalink() ); ?>">Logout</a>

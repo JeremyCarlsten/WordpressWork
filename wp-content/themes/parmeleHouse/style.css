@@ -33,6 +33,15 @@ p {
     margin-bottom: 16px;
 }
 
+.alignright {
+    float: right;
+    padding: 15px
+}
+.alignleft {
+    float: left;
+    padding: 15px
+}
+
 fieldset {
     border: 0;
     padding: 5px 0;
@@ -464,11 +473,6 @@ div#bottom .corner_2 {
     padding: 7px 0 7px 8px;
 }
 
-div#vbottom div {
-    text-align: center;
-    padding: 5px 0;
-}
-
 #nav {
     width: 100%;
     height: 48px;
@@ -667,4 +671,34 @@ div#middle .contentheading, div#middle .componentheading, div.weblink-category h
     padding-left: 70px;
     font-weight: 700;
     margin: 0 0 5px;
+}
+
+/******************************************
+  Clean up section...
+************************************/
+
+footer{
+    text-align: center;
+    padding: 5px 0;
+}
+
+footer #login a{
+    color: #c03f04;
+    text-decoration: underline;
+}
+
+footer #login a:hover{
+    text-decoration: none;
+}
+
+.page-content{
+    padding: 0px 40px 0px 10px;
+}
+
+#TA_rated594 {
+    width: 90%;
+}
+
+#TA_rated594 #CDSWIDFRR  div{
+    background: none;
 }
