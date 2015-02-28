@@ -86,11 +86,12 @@ $shortcode_tags = array();
  * @param string $tag Shortcode tag to be searched in post content.
  * @param callable $func Hook to run when shortcode is found.
  */
-function add_shortcode($tag, $func) {
-	global $shortcode_tags;
+function add_shortcode($tag, $func)
+{
+    global $shortcode_tags;
 
-	if ( is_callable($func) )
-		$shortcode_tags[$tag] = $func;
+    if (is_callable($func))
+        $shortcode_tags[$tag] = $func;
 }
 
 /**
@@ -102,10 +103,11 @@ function add_shortcode($tag, $func) {
  *
  * @param string $tag shortcode tag to remove hook for.
  */
-function remove_shortcode($tag) {
-	global $shortcode_tags;
+function remove_shortcode($tag)
+{
+    global $shortcode_tags;
 
-	unset($shortcode_tags[$tag]);
+    unset($shortcode_tags[$tag]);
 }
 
 /**
@@ -119,10 +121,11 @@ function remove_shortcode($tag) {
  *
  * @uses $shortcode_tags
  */
-function remove_all_shortcodes() {
-	global $shortcode_tags;
+function remove_all_shortcodes()
+{
+    global $shortcode_tags;
 
-	$shortcode_tags = array();
+    $shortcode_tags = array();
 }
 
 /**
@@ -134,9 +137,10 @@ function remove_all_shortcodes() {
  * @param string $tag
  * @return boolean
  */
-function shortcode_exists( $tag ) {
-	global $shortcode_tags;
-	return array_key_exists( $tag, $shortcode_tags );
+function shortcode_exists($tag)
+{
+    global $shortcode_tags;
+    return array_key_exists($tag, $shortcode_tags);
 }
 
 /**
@@ -148,25 +152,26 @@ function shortcode_exists( $tag ) {
  * @param string $tag
  * @return boolean
  */
-function has_shortcode( $content, $tag ) {
-	if ( false === strpos( $content, '[' ) ) {
-		return false;
-	}
+function has_shortcode($content, $tag)
+{
+    if (false === strpos($content, '[')) {
+        return false;
+    }
 
-	if ( shortcode_exists( $tag ) ) {
-		preg_match_all( '/' . get_shortcode_regex() . '/s', $content, $matches, PREG_SET_ORDER );
-		if ( empty( $matches ) )
-			return false;
+    if (shortcode_exists($tag)) {
+        preg_match_all('/' . get_shortcode_regex() . '/s', $content, $matches, PREG_SET_ORDER);
+        if (empty($matches))
+            return false;
 
-		foreach ( $matches as $shortcode ) {
-			if ( $tag === $shortcode[2] ) {
-				return true;
-			} elseif ( ! empty( $shortcode[5] ) && has_shortcode( $shortcode[5], $tag ) ) {
-				return true;
-			}
-		}
-	}
-	return false;
+        foreach ($matches as $shortcode) {
+            if ($tag === $shortcode[2]) {
+                return true;
+            } elseif (!empty($shortcode[5]) && has_shortcode($shortcode[5], $tag)) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 /**
@@ -183,18 +188,19 @@ function has_shortcode( $content, $tag ) {
  * @param string $content Content to search for shortcodes
  * @return string Content with shortcodes filtered out.
  */
-function do_shortcode($content) {
-	global $shortcode_tags;
+function do_shortcode($content)
+{
+    global $shortcode_tags;
 
-	if ( false === strpos( $content, '[' ) ) {
-		return $content;
-	}
+    if (false === strpos($content, '[')) {
+        return $content;
+    }
 
-	if (empty($shortcode_tags) || !is_array($shortcode_tags))
-		return $content;
+    if (empty($shortcode_tags) || !is_array($shortcode_tags))
+        return $content;
 
-	$pattern = get_shortcode_regex();
-	return preg_replace_callback( "/$pattern/s", 'do_shortcode_tag', $content );
+    $pattern = get_shortcode_regex();
+    return preg_replace_callback("/$pattern/s", 'do_shortcode_tag', $content);
 }
 
 /**
@@ -218,42 +224,43 @@ function do_shortcode($content) {
  *
  * @return string The shortcode search regular expression
  */
-function get_shortcode_regex() {
-	global $shortcode_tags;
-	$tagnames = array_keys($shortcode_tags);
-	$tagregexp = join( '|', array_map('preg_quote', $tagnames) );
+function get_shortcode_regex()
+{
+    global $shortcode_tags;
+    $tagnames = array_keys($shortcode_tags);
+    $tagregexp = join('|', array_map('preg_quote', $tagnames));
 
-	// WARNING! Do not change this regex without changing do_shortcode_tag() and strip_shortcode_tag()
-	// Also, see shortcode_unautop() and shortcode.js.
-	return
-		  '\\['                              // Opening bracket
-		. '(\\[?)'                           // 1: Optional second opening bracket for escaping shortcodes: [[tag]]
-		. "($tagregexp)"                     // 2: Shortcode name
-		. '(?![\\w-])'                       // Not followed by word character or hyphen
-		. '('                                // 3: Unroll the loop: Inside the opening shortcode tag
-		.     '[^\\]\\/]*'                   // Not a closing bracket or forward slash
-		.     '(?:'
-		.         '\\/(?!\\])'               // A forward slash not followed by a closing bracket
-		.         '[^\\]\\/]*'               // Not a closing bracket or forward slash
-		.     ')*?'
-		. ')'
-		. '(?:'
-		.     '(\\/)'                        // 4: Self closing tag ...
-		.     '\\]'                          // ... and closing bracket
-		. '|'
-		.     '\\]'                          // Closing bracket
-		.     '(?:'
-		.         '('                        // 5: Unroll the loop: Optionally, anything between the opening and closing shortcode tags
-		.             '[^\\[]*+'             // Not an opening bracket
-		.             '(?:'
-		.                 '\\[(?!\\/\\2\\])' // An opening bracket not followed by the closing shortcode tag
-		.                 '[^\\[]*+'         // Not an opening bracket
-		.             ')*+'
-		.         ')'
-		.         '\\[\\/\\2\\]'             // Closing shortcode tag
-		.     ')?'
-		. ')'
-		. '(\\]?)';                          // 6: Optional second closing brocket for escaping shortcodes: [[tag]]
+    // WARNING! Do not change this regex without changing do_shortcode_tag() and strip_shortcode_tag()
+    // Also, see shortcode_unautop() and shortcode.js.
+    return
+        '\\[' // Opening bracket
+        . '(\\[?)' // 1: Optional second opening bracket for escaping shortcodes: [[tag]]
+        . "($tagregexp)" // 2: Shortcode name
+        . '(?![\\w-])' // Not followed by word character or hyphen
+        . '(' // 3: Unroll the loop: Inside the opening shortcode tag
+        . '[^\\]\\/]*' // Not a closing bracket or forward slash
+        . '(?:'
+        . '\\/(?!\\])' // A forward slash not followed by a closing bracket
+        . '[^\\]\\/]*' // Not a closing bracket or forward slash
+        . ')*?'
+        . ')'
+        . '(?:'
+        . '(\\/)' // 4: Self closing tag ...
+        . '\\]' // ... and closing bracket
+        . '|'
+        . '\\]' // Closing bracket
+        . '(?:'
+        . '(' // 5: Unroll the loop: Optionally, anything between the opening and closing shortcode tags
+        . '[^\\[]*+' // Not an opening bracket
+        . '(?:'
+        . '\\[(?!\\/\\2\\])' // An opening bracket not followed by the closing shortcode tag
+        . '[^\\[]*+' // Not an opening bracket
+        . ')*+'
+        . ')'
+        . '\\[\\/\\2\\]' // Closing shortcode tag
+        . ')?'
+        . ')'
+        . '(\\]?)'; // 6: Optional second closing brocket for escaping shortcodes: [[tag]]
 }
 
 /**
@@ -267,24 +274,25 @@ function get_shortcode_regex() {
  * @param array $m Regular expression match array
  * @return mixed False on failure.
  */
-function do_shortcode_tag( $m ) {
-	global $shortcode_tags;
+function do_shortcode_tag($m)
+{
+    global $shortcode_tags;
 
-	// allow [[foo]] syntax for escaping a tag
-	if ( $m[1] == '[' && $m[6] == ']' ) {
-		return substr($m[0], 1, -1);
-	}
+    // allow [[foo]] syntax for escaping a tag
+    if ($m[1] == '[' && $m[6] == ']') {
+        return substr($m[0], 1, -1);
+    }
 
-	$tag = $m[2];
-	$attr = shortcode_parse_atts( $m[3] );
+    $tag = $m[2];
+    $attr = shortcode_parse_atts($m[3]);
 
-	if ( isset( $m[5] ) ) {
-		// enclosing tag - extra parameter
-		return $m[1] . call_user_func( $shortcode_tags[$tag], $attr, $m[5], $tag ) . $m[6];
-	} else {
-		// self-closing tag
-		return $m[1] . call_user_func( $shortcode_tags[$tag], $attr, null,  $tag ) . $m[6];
-	}
+    if (isset($m[5])) {
+        // enclosing tag - extra parameter
+        return $m[1] . call_user_func($shortcode_tags[$tag], $attr, $m[5], $tag) . $m[6];
+    } else {
+        // self-closing tag
+        return $m[1] . call_user_func($shortcode_tags[$tag], $attr, null, $tag) . $m[6];
+    }
 }
 
 /**
@@ -299,27 +307,28 @@ function do_shortcode_tag( $m ) {
  * @param string $text
  * @return array List of attributes and their value.
  */
-function shortcode_parse_atts($text) {
-	$atts = array();
-	$pattern = '/(\w+)\s*=\s*"([^"]*)"(?:\s|$)|(\w+)\s*=\s*\'([^\']*)\'(?:\s|$)|(\w+)\s*=\s*([^\s\'"]+)(?:\s|$)|"([^"]*)"(?:\s|$)|(\S+)(?:\s|$)/';
-	$text = preg_replace("/[\x{00a0}\x{200b}]+/u", " ", $text);
-	if ( preg_match_all($pattern, $text, $match, PREG_SET_ORDER) ) {
-		foreach ($match as $m) {
-			if (!empty($m[1]))
-				$atts[strtolower($m[1])] = stripcslashes($m[2]);
-			elseif (!empty($m[3]))
-				$atts[strtolower($m[3])] = stripcslashes($m[4]);
-			elseif (!empty($m[5]))
-				$atts[strtolower($m[5])] = stripcslashes($m[6]);
-			elseif (isset($m[7]) and strlen($m[7]))
-				$atts[] = stripcslashes($m[7]);
-			elseif (isset($m[8]))
-				$atts[] = stripcslashes($m[8]);
-		}
-	} else {
-		$atts = ltrim($text);
-	}
-	return $atts;
+function shortcode_parse_atts($text)
+{
+    $atts = array();
+    $pattern = '/(\w+)\s*=\s*"([^"]*)"(?:\s|$)|(\w+)\s*=\s*\'([^\']*)\'(?:\s|$)|(\w+)\s*=\s*([^\s\'"]+)(?:\s|$)|"([^"]*)"(?:\s|$)|(\S+)(?:\s|$)/';
+    $text = preg_replace("/[\x{00a0}\x{200b}]+/u", " ", $text);
+    if (preg_match_all($pattern, $text, $match, PREG_SET_ORDER)) {
+        foreach ($match as $m) {
+            if (!empty($m[1]))
+                $atts[strtolower($m[1])] = stripcslashes($m[2]);
+            elseif (!empty($m[3]))
+                $atts[strtolower($m[3])] = stripcslashes($m[4]);
+            elseif (!empty($m[5]))
+                $atts[strtolower($m[5])] = stripcslashes($m[6]);
+            elseif (isset($m[7]) and strlen($m[7]))
+                $atts[] = stripcslashes($m[7]);
+            elseif (isset($m[8]))
+                $atts[] = stripcslashes($m[8]);
+        }
+    } else {
+        $atts = ltrim($text);
+    }
+    return $atts;
 }
 
 /**
@@ -339,31 +348,32 @@ function shortcode_parse_atts($text) {
  * @param string $shortcode Optional. The name of the shortcode, provided for context to enable filtering
  * @return array Combined and filtered attribute list.
  */
-function shortcode_atts( $pairs, $atts, $shortcode = '' ) {
-	$atts = (array)$atts;
-	$out = array();
-	foreach($pairs as $name => $default) {
-		if ( array_key_exists($name, $atts) )
-			$out[$name] = $atts[$name];
-		else
-			$out[$name] = $default;
-	}
-	/**
-	 * Filter a shortcode's default attributes.
-	 *
-	 * If the third parameter of the shortcode_atts() function is present then this filter is available.
-	 * The third parameter, $shortcode, is the name of the shortcode.
-	 *
-	 * @since 3.6.0
-	 *
-	 * @param array $out The output array of shortcode attributes.
-	 * @param array $pairs The supported attributes and their defaults.
-	 * @param array $atts The user defined shortcode attributes.
-	 */
-	if ( $shortcode )
-		$out = apply_filters( "shortcode_atts_{$shortcode}", $out, $pairs, $atts );
+function shortcode_atts($pairs, $atts, $shortcode = '')
+{
+    $atts = (array)$atts;
+    $out = array();
+    foreach ($pairs as $name => $default) {
+        if (array_key_exists($name, $atts))
+            $out[$name] = $atts[$name];
+        else
+            $out[$name] = $default;
+    }
+    /**
+     * Filter a shortcode's default attributes.
+     *
+     * If the third parameter of the shortcode_atts() function is present then this filter is available.
+     * The third parameter, $shortcode, is the name of the shortcode.
+     *
+     * @since 3.6.0
+     *
+     * @param array $out The output array of shortcode attributes.
+     * @param array $pairs The supported attributes and their defaults.
+     * @param array $atts The user defined shortcode attributes.
+     */
+    if ($shortcode)
+        $out = apply_filters("shortcode_atts_{$shortcode}", $out, $pairs, $atts);
 
-	return $out;
+    return $out;
 }
 
 /**
@@ -376,28 +386,30 @@ function shortcode_atts( $pairs, $atts, $shortcode = '' ) {
  * @param string $content Content to remove shortcode tags.
  * @return string Content without shortcode tags.
  */
-function strip_shortcodes( $content ) {
-	global $shortcode_tags;
+function strip_shortcodes($content)
+{
+    global $shortcode_tags;
 
-	if ( false === strpos( $content, '[' ) ) {
-		return $content;
-	}
+    if (false === strpos($content, '[')) {
+        return $content;
+    }
 
-	if (empty($shortcode_tags) || !is_array($shortcode_tags))
-		return $content;
+    if (empty($shortcode_tags) || !is_array($shortcode_tags))
+        return $content;
 
-	$pattern = get_shortcode_regex();
+    $pattern = get_shortcode_regex();
 
-	return preg_replace_callback( "/$pattern/s", 'strip_shortcode_tag', $content );
+    return preg_replace_callback("/$pattern/s", 'strip_shortcode_tag', $content);
 }
 
-function strip_shortcode_tag( $m ) {
-	// allow [[foo]] syntax for escaping a tag
-	if ( $m[1] == '[' && $m[6] == ']' ) {
-		return substr($m[0], 1, -1);
-	}
+function strip_shortcode_tag($m)
+{
+    // allow [[foo]] syntax for escaping a tag
+    if ($m[1] == '[' && $m[6] == ']') {
+        return substr($m[0], 1, -1);
+    }
 
-	return $m[1] . $m[6];
+    return $m[1] . $m[6];
 }
 
 add_filter('the_content', 'do_shortcode', 11); // AFTER wpautop()

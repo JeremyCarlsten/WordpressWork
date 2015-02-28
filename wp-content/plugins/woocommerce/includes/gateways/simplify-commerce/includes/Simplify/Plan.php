@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (c) 2013, 2014 MasterCard International Incorporated
  * All rights reserved.
@@ -27,7 +28,8 @@
  */
 
 
-class Simplify_Plan extends Simplify_Object {
+class Simplify_Plan extends Simplify_Object
+{
     /**
      * Creates an Simplify_Plan object
      * @param     array $hash a map of parameters; valid keys are:<dl style="padding-left:10px;">
@@ -38,7 +40,8 @@ class Simplify_Plan extends Simplify_Object {
      * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.<i/>
      * @return    Plan a Plan object.
      */
-    static public function createPlan($hash, $authentication = null) {
+    static public function createPlan($hash, $authentication = null)
+    {
 
         $args = func_get_args();
         $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
@@ -51,91 +54,94 @@ class Simplify_Plan extends Simplify_Object {
     }
 
 
+    /**
+     * Deletes an Simplify_Plan object.
+     *
+     * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
+     */
+    public function deletePlan($authentication = null)
+    {
+
+        $args = func_get_args();
+        $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 1);
+
+        $obj = Simplify_PaymentsApi::deleteObject($this, $authentication);
+        $this->properties = null;
+        return true;
+    }
 
 
-       /**
-        * Deletes an Simplify_Plan object.
-        *
-        * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
-        */
-        public function deletePlan($authentication = null) {
+    /**
+     * Retrieve Simplify_Plan objects.
+     * @param     array criteria a map of parameters; valid keys are:<dl style="padding-left:10px;">
+     *     <dt><tt>filter</tt></dt>    <dd>Filters to apply to the list.  </dd>
+     *     <dt><tt>max</tt></dt>    <dd>Allows up to a max of 50 list items to return. [max value: 50, default: 20]  </dd>
+     *     <dt><tt>offset</tt></dt>    <dd>Used in paging of the list.  This is the start offset of the page. [default: 0]  </dd>
+     *     <dt><tt>sorting</tt></dt>    <dd>Allows for ascending or descending sorting of the list.  The value maps properties to the sort direction (either <tt>asc</tt> for ascending or <tt>desc</tt> for descending).  Sortable properties are: <tt> dateCreated</tt><tt> amount</tt><tt> frequency</tt><tt> name</tt><tt> id</tt>.</dd></dl>
+     * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
+     * @return    Simplify_ResourceList a ResourceList object that holds the list of Plan objects and the total
+     *            number of Plan objects available for the given criteria.
+     * @see       ResourceList
+     */
+    static public function listPlan($criteria = null, $authentication = null)
+    {
 
-            $args = func_get_args();
-            $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 1);
+        $args = func_get_args();
+        $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
 
-            $obj = Simplify_PaymentsApi::deleteObject($this, $authentication);
-            $this->properties = null;
-            return true;
-        }
+        $val = new Simplify_Plan();
+        $list = Simplify_PaymentsApi::listObject($val, $criteria, $authentication);
 
-
-       /**
-        * Retrieve Simplify_Plan objects.
-        * @param     array criteria a map of parameters; valid keys are:<dl style="padding-left:10px;">
-        *     <dt><tt>filter</tt></dt>    <dd>Filters to apply to the list.  </dd>
-        *     <dt><tt>max</tt></dt>    <dd>Allows up to a max of 50 list items to return. [max value: 50, default: 20]  </dd>
-        *     <dt><tt>offset</tt></dt>    <dd>Used in paging of the list.  This is the start offset of the page. [default: 0]  </dd>
-        *     <dt><tt>sorting</tt></dt>    <dd>Allows for ascending or descending sorting of the list.  The value maps properties to the sort direction (either <tt>asc</tt> for ascending or <tt>desc</tt> for descending).  Sortable properties are: <tt> dateCreated</tt><tt> amount</tt><tt> frequency</tt><tt> name</tt><tt> id</tt>.</dd></dl>
-        * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
-        * @return    Simplify_ResourceList a ResourceList object that holds the list of Plan objects and the total
-        *            number of Plan objects available for the given criteria.
-        * @see       ResourceList
-        */
-        static public function listPlan($criteria = null, $authentication = null) {
-
-            $args = func_get_args();
-            $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
-
-            $val = new Simplify_Plan();
-            $list = Simplify_PaymentsApi::listObject($val, $criteria, $authentication);
-
-            return $list;
-        }
+        return $list;
+    }
 
 
-        /**
-         * Retrieve a Simplify_Plan object from the API
-         *
-         * @param     string id  the id of the Plan object to retrieve
-         * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
-         * @return    Plan a Plan object
-         */
-        static public function findPlan($id, $authentication = null) {
+    /**
+     * Retrieve a Simplify_Plan object from the API
+     *
+     * @param     string id  the id of the Plan object to retrieve
+     * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
+     * @return    Plan a Plan object
+     */
+    static public function findPlan($id, $authentication = null)
+    {
 
-            $args = func_get_args();
-            $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
+        $args = func_get_args();
+        $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
 
-            $val = new Simplify_Plan();
-            $val->id = $id;
+        $val = new Simplify_Plan();
+        $val->id = $id;
 
-            $obj = Simplify_PaymentsApi::findObject($val, $authentication);
+        $obj = Simplify_PaymentsApi::findObject($val, $authentication);
 
-            return $obj;
-        }
+        return $obj;
+    }
 
 
-        /**
-         * Updates an Simplify_Plan object.
-         *
-         * The properties that can be updated:
-         * <dl style="padding-left:10px;">
-         *     <dt><tt>name</tt></dt>    <dd>Name of the plan. [min length: 2] <strong>required </strong></dd></dl>
-         * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
-         * @return    Plan a Plan object.
-         */
-        public function updatePlan($authentication = null)  {
+    /**
+     * Updates an Simplify_Plan object.
+     *
+     * The properties that can be updated:
+     * <dl style="padding-left:10px;">
+     *     <dt><tt>name</tt></dt>    <dd>Name of the plan. [min length: 2] <strong>required </strong></dd></dl>
+     * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
+     * @return    Plan a Plan object.
+     */
+    public function updatePlan($authentication = null)
+    {
 
-            $args = func_get_args();
-            $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 1);
+        $args = func_get_args();
+        $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 1);
 
-            $object = Simplify_PaymentsApi::updateObject($this, $authentication);
-            return $object;
-        }
+        $object = Simplify_PaymentsApi::updateObject($this, $authentication);
+        return $object;
+    }
 
     /**
      * @ignore
      */
-    public function getClazz() {
+    public function getClazz()
+    {
         return "Plan";
     }
 }

@@ -24,29 +24,30 @@
  * @param string|bool|array $handles Optional. Scripts to be printed. Default 'false'.
  * @return array On success, a processed array of WP_Dependencies items; otherwise, an empty array.
  */
-function wp_print_scripts( $handles = false ) {
-	/**
-	 * Fires before scripts in the $handles queue are printed.
-	 *
-	 * @since 2.1.0
-	 */
-	do_action( 'wp_print_scripts' );
-	if ( '' === $handles ) // for wp_head
-		$handles = false;
+function wp_print_scripts($handles = false)
+{
+    /**
+     * Fires before scripts in the $handles queue are printed.
+     *
+     * @since 2.1.0
+     */
+    do_action('wp_print_scripts');
+    if ('' === $handles) // for wp_head
+        $handles = false;
 
-	global $wp_scripts;
-	if ( ! is_a( $wp_scripts, 'WP_Scripts' ) ) {
-		if ( ! did_action( 'init' ) )
-			_doing_it_wrong( __FUNCTION__, sprintf( __( 'Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.' ),
-				'<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>login_enqueue_scripts</code>' ), '3.3' );
+    global $wp_scripts;
+    if (!is_a($wp_scripts, 'WP_Scripts')) {
+        if (!did_action('init'))
+            _doing_it_wrong(__FUNCTION__, sprintf(__('Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.'),
+                '<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>login_enqueue_scripts</code>'), '3.3');
 
-		if ( !$handles )
-			return array(); // No need to instantiate if nothing is there.
-		else
-			$wp_scripts = new WP_Scripts();
-	}
+        if (!$handles)
+            return array(); // No need to instantiate if nothing is there.
+        else
+            $wp_scripts = new WP_Scripts();
+    }
 
-	return $wp_scripts->do_items( $handles );
+    return $wp_scripts->do_items($handles);
 }
 
 /**
@@ -59,29 +60,30 @@ function wp_print_scripts( $handles = false ) {
  *
  * @since 2.6.0
  *
- * @param string      $handle    Name of the script. Should be unique.
- * @param string      $src       Path to the script from the WordPress root directory. Example: '/js/myscript.js'.
- * @param array       $deps      Optional. An array of registered script handles this script depends on. Set to false if there
+ * @param string $handle Name of the script. Should be unique.
+ * @param string $src Path to the script from the WordPress root directory. Example: '/js/myscript.js'.
+ * @param array $deps Optional. An array of registered script handles this script depends on. Set to false if there
  *                               are no dependencies. Default empty array.
- * @param string|bool $ver       Optional. String specifying script version number, if it has one, which is concatenated
+ * @param string|bool $ver Optional. String specifying script version number, if it has one, which is concatenated
  *                               to end of path as a query string. If no version is specified or set to false, a version
  *                               number is automatically added equal to current installed WordPress version.
  *                               If set to null, no version is added. Default 'false'. Accepts 'false', 'null', or 'string'.
- * @param bool        $in_footer Optional. Whether to enqueue the script before </head> or before </body>.
+ * @param bool $in_footer Optional. Whether to enqueue the script before </head> or before </body>.
  *                               Default 'false'. Accepts 'false' or 'true'.
  */
-function wp_register_script( $handle, $src, $deps = array(), $ver = false, $in_footer = false ) {
-	global $wp_scripts;
-	if ( ! is_a( $wp_scripts, 'WP_Scripts' ) ) {
-		if ( ! did_action( 'init' ) )
-			_doing_it_wrong( __FUNCTION__, sprintf( __( 'Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.' ),
-				'<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>login_enqueue_scripts</code>' ), '3.3' );
-		$wp_scripts = new WP_Scripts();
-	}
+function wp_register_script($handle, $src, $deps = array(), $ver = false, $in_footer = false)
+{
+    global $wp_scripts;
+    if (!is_a($wp_scripts, 'WP_Scripts')) {
+        if (!did_action('init'))
+            _doing_it_wrong(__FUNCTION__, sprintf(__('Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.'),
+                '<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>login_enqueue_scripts</code>'), '3.3');
+        $wp_scripts = new WP_Scripts();
+    }
 
-	$wp_scripts->add( $handle, $src, $deps, $ver );
-	if ( $in_footer )
-		$wp_scripts->add_data( $handle, 'group', 1 );
+    $wp_scripts->add($handle, $src, $deps, $ver);
+    if ($in_footer)
+        $wp_scripts->add_data($handle, 'group', 1);
 }
 
 /**
@@ -106,23 +108,24 @@ function wp_register_script( $handle, $src, $deps = array(), $ver = false, $in_f
  *
  * @todo Documentation cleanup
  *
- * @param string $handle      Script handle the data will be attached to.
+ * @param string $handle Script handle the data will be attached to.
  * @param string $object_name Name for the JavaScript object. Passed directly, so it should be qualified JS variable.
  *                            Example: '/[a-zA-Z0-9_]+/'.
- * @param array $l10n         The data itself. The data can be either a single or multi-dimensional array.
+ * @param array $l10n The data itself. The data can be either a single or multi-dimensional array.
  * @return bool True if the script was successfully localized, false otherwise.
  */
-function wp_localize_script( $handle, $object_name, $l10n ) {
-	global $wp_scripts;
-	if ( ! is_a( $wp_scripts, 'WP_Scripts' ) ) {
-		if ( ! did_action( 'init' ) )
-			_doing_it_wrong( __FUNCTION__, sprintf( __( 'Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.' ),
-				'<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>login_enqueue_scripts</code>' ), '3.3' );
+function wp_localize_script($handle, $object_name, $l10n)
+{
+    global $wp_scripts;
+    if (!is_a($wp_scripts, 'WP_Scripts')) {
+        if (!did_action('init'))
+            _doing_it_wrong(__FUNCTION__, sprintf(__('Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.'),
+                '<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>login_enqueue_scripts</code>'), '3.3');
 
-		return false;
-	}
+        return false;
+    }
 
-	return $wp_scripts->localize( $handle, $object_name, $l10n );
+    return $wp_scripts->localize($handle, $object_name, $l10n);
 }
 
 /**
@@ -138,41 +141,42 @@ function wp_localize_script( $handle, $object_name, $l10n ) {
  *
  * @param string $handle Name of the script to be removed.
  */
-function wp_deregister_script( $handle ) {
-	global $wp_scripts;
-	if ( ! is_a( $wp_scripts, 'WP_Scripts' ) ) {
-		if ( ! did_action( 'init' ) )
-			_doing_it_wrong( __FUNCTION__, sprintf( __( 'Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.' ),
-				'<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>login_enqueue_scripts</code>' ), '3.3' );
-		$wp_scripts = new WP_Scripts();
-	}
+function wp_deregister_script($handle)
+{
+    global $wp_scripts;
+    if (!is_a($wp_scripts, 'WP_Scripts')) {
+        if (!did_action('init'))
+            _doing_it_wrong(__FUNCTION__, sprintf(__('Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.'),
+                '<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>login_enqueue_scripts</code>'), '3.3');
+        $wp_scripts = new WP_Scripts();
+    }
 
-	/**
-	 * Do not allow accidental or negligent de-registering of critical scripts in the admin.
-	 * Show minimal remorse if the correct hook is used.
-	 */
-	$current_filter = current_filter();
-	if ( ( is_admin() && 'admin_enqueue_scripts' !== $current_filter ) ||
-		( 'wp-login.php' === $GLOBALS['pagenow'] && 'login_enqueue_scripts' !== $current_filter )
-	) {
-		$no = array(
-			'jquery', 'jquery-core', 'jquery-migrate', 'jquery-ui-core', 'jquery-ui-accordion',
-			'jquery-ui-autocomplete', 'jquery-ui-button', 'jquery-ui-datepicker', 'jquery-ui-dialog',
-			'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-menu', 'jquery-ui-mouse',
-			'jquery-ui-position', 'jquery-ui-progressbar', 'jquery-ui-resizable', 'jquery-ui-selectable',
-			'jquery-ui-slider', 'jquery-ui-sortable', 'jquery-ui-spinner', 'jquery-ui-tabs',
-			'jquery-ui-tooltip', 'jquery-ui-widget', 'underscore', 'backbone',
-		);
+    /**
+     * Do not allow accidental or negligent de-registering of critical scripts in the admin.
+     * Show minimal remorse if the correct hook is used.
+     */
+    $current_filter = current_filter();
+    if ((is_admin() && 'admin_enqueue_scripts' !== $current_filter) ||
+        ('wp-login.php' === $GLOBALS['pagenow'] && 'login_enqueue_scripts' !== $current_filter)
+    ) {
+        $no = array(
+            'jquery', 'jquery-core', 'jquery-migrate', 'jquery-ui-core', 'jquery-ui-accordion',
+            'jquery-ui-autocomplete', 'jquery-ui-button', 'jquery-ui-datepicker', 'jquery-ui-dialog',
+            'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-menu', 'jquery-ui-mouse',
+            'jquery-ui-position', 'jquery-ui-progressbar', 'jquery-ui-resizable', 'jquery-ui-selectable',
+            'jquery-ui-slider', 'jquery-ui-sortable', 'jquery-ui-spinner', 'jquery-ui-tabs',
+            'jquery-ui-tooltip', 'jquery-ui-widget', 'underscore', 'backbone',
+        );
 
-		if ( in_array( $handle, $no ) ) {
-			$message = sprintf( __( 'Do not deregister the %1$s script in the administration area. To target the frontend theme, use the %2$s hook.' ),
-				"<code>$handle</code>", '<code>wp_enqueue_scripts</code>' );
-			_doing_it_wrong( __FUNCTION__, $message, '3.6' );
-			return;
-		}
-	}
+        if (in_array($handle, $no)) {
+            $message = sprintf(__('Do not deregister the %1$s script in the administration area. To target the frontend theme, use the %2$s hook.'),
+                "<code>$handle</code>", '<code>wp_enqueue_scripts</code>');
+            _doing_it_wrong(__FUNCTION__, $message, '3.6');
+            return;
+        }
+    }
 
-	$wp_scripts->remove( $handle );
+    $wp_scripts->remove($handle);
 }
 
 /**
@@ -184,32 +188,32 @@ function wp_deregister_script( $handle ) {
  * @global WP_Scripts $wp_scripts The WP_Scripts object for printing scripts.
  *
  * @since 2.6.0
-
- * @param string      $handle    Name of the script.
- * @param string|bool $src       Path to the script from the root directory of WordPress. Example: '/js/myscript.js'.
- * @param array       $deps      An array of registered handles this script depends on. Default empty array.
- * @param string|bool $ver       Optional. String specifying the script version number, if it has one. This parameter
+ * @param string $handle Name of the script.
+ * @param string|bool $src Path to the script from the root directory of WordPress. Example: '/js/myscript.js'.
+ * @param array $deps An array of registered handles this script depends on. Default empty array.
+ * @param string|bool $ver Optional. String specifying the script version number, if it has one. This parameter
  *                               is used to ensure that the correct version is sent to the client regardless of caching,
  *                               and so should be included if a version number is available and makes sense for the script.
- * @param bool        $in_footer Optional. Whether to enqueue the script before </head> or before </body>.
+ * @param bool $in_footer Optional. Whether to enqueue the script before </head> or before </body>.
  *                               Default 'false'. Accepts 'false' or 'true'.
  */
-function wp_enqueue_script( $handle, $src = false, $deps = array(), $ver = false, $in_footer = false ) {
-	global $wp_scripts;
-	if ( ! is_a( $wp_scripts, 'WP_Scripts' ) ) {
-		if ( ! did_action( 'init' ) )
-			_doing_it_wrong( __FUNCTION__, sprintf( __( 'Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.' ),
-				'<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>login_enqueue_scripts</code>' ), '3.3' );
-		$wp_scripts = new WP_Scripts();
-	}
+function wp_enqueue_script($handle, $src = false, $deps = array(), $ver = false, $in_footer = false)
+{
+    global $wp_scripts;
+    if (!is_a($wp_scripts, 'WP_Scripts')) {
+        if (!did_action('init'))
+            _doing_it_wrong(__FUNCTION__, sprintf(__('Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.'),
+                '<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>login_enqueue_scripts</code>'), '3.3');
+        $wp_scripts = new WP_Scripts();
+    }
 
-	if ( $src ) {
-		$_handle = explode('?', $handle);
-		$wp_scripts->add( $_handle[0], $src, $deps, $ver );
-		if ( $in_footer )
-			$wp_scripts->add_data( $_handle[0], 'group', 1 );
-	}
-	$wp_scripts->enqueue( $handle );
+    if ($src) {
+        $_handle = explode('?', $handle);
+        $wp_scripts->add($_handle[0], $src, $deps, $ver);
+        if ($in_footer)
+            $wp_scripts->add_data($_handle[0], 'group', 1);
+    }
+    $wp_scripts->enqueue($handle);
 }
 
 /**
@@ -222,16 +226,17 @@ function wp_enqueue_script( $handle, $src = false, $deps = array(), $ver = false
  *
  * @param string $handle Name of the script to be removed.
  */
-function wp_dequeue_script( $handle ) {
-	global $wp_scripts;
-	if ( ! is_a( $wp_scripts, 'WP_Scripts' ) ) {
-		if ( ! did_action( 'init' ) )
-			_doing_it_wrong( __FUNCTION__, sprintf( __( 'Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.' ),
-				'<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>login_enqueue_scripts</code>' ), '3.3' );
-		$wp_scripts = new WP_Scripts();
-	}
+function wp_dequeue_script($handle)
+{
+    global $wp_scripts;
+    if (!is_a($wp_scripts, 'WP_Scripts')) {
+        if (!did_action('init'))
+            _doing_it_wrong(__FUNCTION__, sprintf(__('Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.'),
+                '<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>login_enqueue_scripts</code>'), '3.3');
+        $wp_scripts = new WP_Scripts();
+    }
 
-	$wp_scripts->dequeue( $handle );
+    $wp_scripts->dequeue($handle);
 }
 
 /**
@@ -243,18 +248,19 @@ function wp_dequeue_script( $handle ) {
  * @since 3.5.0 'enqueued' added as an alias of the 'queue' list.
  *
  * @param string $handle Name of the script.
- * @param string $list   Optional. Status of the script to check. Default 'enqueued'.
+ * @param string $list Optional. Status of the script to check. Default 'enqueued'.
  *                       Accepts 'enqueued', 'registered', 'queue', 'to_do', and 'done'.
  * @return bool Whether the script script is queued.
  */
-function wp_script_is( $handle, $list = 'enqueued' ) {
-	global $wp_scripts;
-	if ( ! is_a( $wp_scripts, 'WP_Scripts' ) ) {
-		if ( ! did_action( 'init' ) )
-			_doing_it_wrong( __FUNCTION__, sprintf( __( 'Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.' ),
-				'<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>login_enqueue_scripts</code>' ), '3.3' );
-		$wp_scripts = new WP_Scripts();
-	}
+function wp_script_is($handle, $list = 'enqueued')
+{
+    global $wp_scripts;
+    if (!is_a($wp_scripts, 'WP_Scripts')) {
+        if (!did_action('init'))
+            _doing_it_wrong(__FUNCTION__, sprintf(__('Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.'),
+                '<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>login_enqueue_scripts</code>'), '3.3');
+        $wp_scripts = new WP_Scripts();
+    }
 
-	return (bool) $wp_scripts->query( $handle, $list );
+    return (bool)$wp_scripts->query($handle, $list);
 }

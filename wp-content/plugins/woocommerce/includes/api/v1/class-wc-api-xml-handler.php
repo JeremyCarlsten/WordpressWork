@@ -11,302 +11,310 @@
  * @version     2.1
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
 }
 
-class WC_API_XML_Handler implements WC_API_Handler {
+class WC_API_XML_Handler implements WC_API_Handler
+{
+
+    /** @var XMLWriter instance */
+    private $xml;
+
+    /**
+     * Add some response filters
+     *
+     * @since 2.1
+     */
+    public function __construct()
+    {
+
+        // tweak sales report response data
+        add_filter('woocommerce_api_report_response', array($this, 'format_sales_report_data'), 100);
+
+        // tweak product response data
+        add_filter('woocommerce_api_product_response', array($this, 'format_product_data'), 100);
+    }
+
+    /**
+     * Get the content type for the response
+     *
+     * @since 2.1
+     * @return string
+     */
+    public function get_content_type()
+    {
+
+        return 'application/xml; charset=' . get_option('blog_charset');
+    }
+
+    /**
+     * Parse the raw request body entity
+     *
+     * @since 2.1
+     * @param string $data the raw request body
+     * @return array
+     */
+    public function parse_body($data)
+    {
+
+        // TODO: implement simpleXML parsing
+    }
+
+    /**
+     * Generate an XML response given an array of data
+     *
+     * @since 2.1
+     * @param array $data the response data
+     * @return string
+     */
+    public function generate_response($data)
+    {
+
+        $this->xml = new XMLWriter();
+
+        $this->xml->openMemory();
+
+        $this->xml->setIndent(true);
+
+        $this->xml->startDocument('1.0', 'UTF-8');
 
-	/** @var XMLWriter instance */
-	private $xml;
+        $root_element = key($data);
 
-	/**
-	 * Add some response filters
-	 *
-	 * @since 2.1
-	 */
-	public function __construct() {
-
-		// tweak sales report response data
-		add_filter( 'woocommerce_api_report_response', array( $this, 'format_sales_report_data' ), 100 );
+        $data = $data[$root_element];
 
-		// tweak product response data
-		add_filter( 'woocommerce_api_product_response', array( $this, 'format_product_data' ), 100 );
-	}
+        switch ($root_element) {
 
-	/**
-	 * Get the content type for the response
-	 *
-	 * @since 2.1
-	 * @return string
-	 */
-	public function get_content_type() {
-
-		return 'application/xml; charset=' . get_option( 'blog_charset' );
-	}
-
-	/**
-	 * Parse the raw request body entity
-	 *
-	 * @since 2.1
-	 * @param string $data the raw request body
-	 * @return array
-	 */
-	public function parse_body( $data ) {
+            case 'orders':
+                $data = array('order' => $data);
+                break;
 
-		// TODO: implement simpleXML parsing
-	}
+            case 'order_notes':
+                $data = array('order_note' => $data);
+                break;
 
-	/**
-	 * Generate an XML response given an array of data
-	 *
-	 * @since 2.1
-	 * @param array $data the response data
-	 * @return string
-	 */
-	public function generate_response( $data ) {
+            case 'customers':
+                $data = array('customer' => $data);
+                break;
 
-		$this->xml = new XMLWriter();
+            case 'coupons':
+                $data = array('coupon' => $data);
+                break;
 
-		$this->xml->openMemory();
+            case 'products':
+                $data = array('product' => $data);
+                break;
 
-		$this->xml->setIndent(true);
+            case 'product_reviews':
+                $data = array('product_review' => $data);
+                break;
 
-		$this->xml->startDocument( '1.0', 'UTF-8' );
+            default:
+                $data = apply_filters('woocommerce_api_xml_data', $data, $root_element);
+                break;
+        }
 
-		$root_element = key( $data );
+        // generate xml starting with the root element and recursively generating child elements
+        $this->array_to_xml($root_element, $data);
 
-		$data = $data[ $root_element ];
+        $this->xml->endDocument();
 
-		switch ( $root_element ) {
+        return $this->xml->outputMemory();
+    }
 
-			case 'orders':
-				$data = array( 'order' => $data );
-				break;
+    /**
+     * Convert array into XML by recursively generating child elements
+     *
+     * @since 2.1
+     * @param string|array $element_key - name for element, e.g. <OrderID>
+     * @param string|array $element_value - value for element, e.g. 1234
+     * @return string - generated XML
+     */
+    private function array_to_xml($element_key, $element_value = array())
+    {
 
-			case 'order_notes':
-				$data = array( 'order_note' => $data );
-				break;
+        if (is_array($element_value)) {
 
-			case 'customers':
-				$data = array( 'customer' => $data );
-				break;
+            // handle attributes
+            if ('@attributes' === $element_key) {
+                foreach ($element_value as $attribute_key => $attribute_value) {
 
-			case 'coupons':
-				$data = array( 'coupon' => $data );
-				break;
+                    $this->xml->startAttribute($attribute_key);
+                    $this->xml->text($attribute_value);
+                    $this->xml->endAttribute();
+                }
+                return;
+            }
 
-			case 'products':
-				$data = array( 'product' => $data );
-				break;
+            // handle multi-elements (e.g. multiple <Order> elements)
+            if (is_numeric(key($element_value))) {
 
-			case 'product_reviews':
-				$data = array( 'product_review' => $data );
-				break;
+                // recursively generate child elements
+                foreach ($element_value as $child_element_key => $child_element_value) {
 
-			default:
-				$data = apply_filters( 'woocommerce_api_xml_data', $data, $root_element );
-				break;
-		}
+                    $this->xml->startElement($element_key);
 
-		// generate xml starting with the root element and recursively generating child elements
-		$this->array_to_xml( $root_element, $data );
+                    foreach ($child_element_value as $sibling_element_key => $sibling_element_value) {
+                        $this->array_to_xml($sibling_element_key, $sibling_element_value);
+                    }
 
-		$this->xml->endDocument();
+                    $this->xml->endElement();
+                }
 
-		return $this->xml->outputMemory();
-	}
+            } else {
 
-	/**
-	 * Convert array into XML by recursively generating child elements
-	 *
-	 * @since 2.1
-	 * @param string|array $element_key - name for element, e.g. <OrderID>
-	 * @param string|array $element_value - value for element, e.g. 1234
-	 * @return string - generated XML
-	 */
-	private function array_to_xml( $element_key, $element_value = array() ) {
+                // start root element
+                $this->xml->startElement($element_key);
 
-		if ( is_array( $element_value ) ) {
+                // recursively generate child elements
+                foreach ($element_value as $child_element_key => $child_element_value) {
+                    $this->array_to_xml($child_element_key, $child_element_value);
+                }
 
-			// handle attributes
-			if ( '@attributes' === $element_key ) {
-				foreach ( $element_value as $attribute_key => $attribute_value ) {
+                // end root element
+                $this->xml->endElement();
+            }
 
-					$this->xml->startAttribute( $attribute_key );
-					$this->xml->text( $attribute_value );
-					$this->xml->endAttribute();
-				}
-				return;
-			}
+        } else {
 
-			// handle multi-elements (e.g. multiple <Order> elements)
-			if ( is_numeric( key( $element_value ) ) ) {
+            // handle single elements
+            if ('@value' == $element_key) {
 
-				// recursively generate child elements
-				foreach ( $element_value as $child_element_key => $child_element_value ) {
+                $this->xml->text($element_value);
 
-					$this->xml->startElement( $element_key );
+            } else {
 
-					foreach ( $child_element_value as $sibling_element_key => $sibling_element_value ) {
-						$this->array_to_xml( $sibling_element_key, $sibling_element_value );
-					}
+                // wrap element in CDATA tags if it contains illegal characters
+                if (false !== strpos($element_value, '<') || false !== strpos($element_value, '>')) {
 
-					$this->xml->endElement();
-				}
+                    $this->xml->startElement($element_key);
+                    $this->xml->writeCdata($element_value);
+                    $this->xml->endElement();
 
-			} else {
+                } else {
 
-				// start root element
-				$this->xml->startElement( $element_key );
+                    $this->xml->writeElement($element_key, $element_value);
+                }
 
-				// recursively generate child elements
-				foreach ( $element_value as $child_element_key => $child_element_value ) {
-					$this->array_to_xml( $child_element_key, $child_element_value );
-				}
+            }
 
-				// end root element
-				$this->xml->endElement();
-			}
+            return;
+        }
+    }
 
-		} else {
+    /**
+     * Adjust the sales report array format to change totals keyed with the sales date to become an
+     * attribute for the totals element instead
+     *
+     * @since 2.1
+     * @param array $data
+     * @return array
+     */
+    public function format_sales_report_data($data)
+    {
 
-			// handle single elements
-			if ( '@value' == $element_key ) {
+        if (!empty($data['totals'])) {
 
-				$this->xml->text( $element_value );
+            foreach ($data['totals'] as $date => $totals) {
 
-			} else {
+                unset($data['totals'][$date]);
 
-				// wrap element in CDATA tags if it contains illegal characters
-				if ( false !== strpos( $element_value, '<' ) || false !== strpos( $element_value, '>' ) ) {
+                $data['totals'][] = array_merge(array('@attributes' => array('date' => $date)), $totals);
+            }
+        }
 
-					$this->xml->startElement( $element_key );
-					$this->xml->writeCdata( $element_value );
-					$this->xml->endElement();
+        return $data;
+    }
 
-				} else {
+    /**
+     * Adjust the product data to handle options for attributes without a named child element and other
+     * fields that have no named child elements (e.g. categories = array( 'cat1', 'cat2' ) )
+     *
+     * Note that the parent product data for variations is also adjusted in the same manner as needed
+     *
+     * @since 2.1
+     * @param array $data
+     * @return array
+     */
+    public function format_product_data($data)
+    {
 
-					$this->xml->writeElement( $element_key, $element_value );
-				}
+        // handle attribute values
+        if (!empty($data['attributes'])) {
 
-			}
+            foreach ($data['attributes'] as $attribute_key => $attribute) {
 
-			return;
-		}
-	}
+                if (!empty($attribute['options']) && is_array($attribute['options'])) {
 
-	/**
-	 * Adjust the sales report array format to change totals keyed with the sales date to become an
-	 * attribute for the totals element instead
-	 *
-	 * @since 2.1
-	 * @param array $data
-	 * @return array
-	 */
-	public function format_sales_report_data( $data ) {
+                    foreach ($attribute['options'] as $option_key => $option) {
 
-		if ( ! empty( $data['totals'] ) ) {
+                        unset($data['attributes'][$attribute_key]['options'][$option_key]);
 
-			foreach ( $data['totals'] as $date => $totals ) {
+                        $data['attributes'][$attribute_key]['options']['option'][] = array($option);
+                    }
+                }
+            }
+        }
 
-				unset( $data['totals'][ $date ] );
+        // simple arrays are fine for JSON, but XML requires a child element name, so this adjusts the data
+        // array to define a child element name for each field
+        $fields_to_fix = array(
+            'related_ids' => 'related_id',
+            'upsell_ids' => 'upsell_id',
+            'cross_sell_ids' => 'cross_sell_id',
+            'categories' => 'category',
+            'tags' => 'tag'
+        );
 
-				$data['totals'][] = array_merge( array( '@attributes' => array( 'date' => $date ) ), $totals );
-			}
-		}
+        foreach ($fields_to_fix as $parent_field_name => $child_field_name) {
 
-		return $data;
-	}
+            if (!empty($data[$parent_field_name])) {
 
-	/**
-	 * Adjust the product data to handle options for attributes without a named child element and other
-	 * fields that have no named child elements (e.g. categories = array( 'cat1', 'cat2' ) )
-	 *
-	 * Note that the parent product data for variations is also adjusted in the same manner as needed
-	 *
-	 * @since 2.1
-	 * @param array $data
-	 * @return array
-	 */
-	public function format_product_data( $data ) {
+                foreach ($data[$parent_field_name] as $field_key => $field) {
 
-		// handle attribute values
-		if ( ! empty( $data['attributes'] ) ) {
+                    unset($data[$parent_field_name][$field_key]);
 
-			foreach ( $data['attributes'] as $attribute_key => $attribute ) {
+                    $data[$parent_field_name][$child_field_name][] = array($field);
+                }
+            }
+        }
 
-				if ( ! empty( $attribute['options'] ) && is_array( $attribute['options'] ) ) {
+        // handle adjusting the parent product for variations
+        if (!empty($data['parent'])) {
 
-					foreach ( $attribute['options'] as $option_key => $option ) {
+            // attributes
+            if (!empty($data['parent']['attributes'])) {
 
-						unset( $data['attributes'][ $attribute_key ]['options'][ $option_key ] );
+                foreach ($data['parent']['attributes'] as $attribute_key => $attribute) {
 
-						$data['attributes'][ $attribute_key ]['options']['option'][] = array( $option );
-					}
-				}
-			}
-		}
+                    if (!empty($attribute['options']) && is_array($attribute['options'])) {
 
-		// simple arrays are fine for JSON, but XML requires a child element name, so this adjusts the data
-		// array to define a child element name for each field
-		$fields_to_fix = array(
-			'related_ids'    => 'related_id',
-			'upsell_ids'     => 'upsell_id',
-			'cross_sell_ids' => 'cross_sell_id',
-			'categories'     => 'category',
-			'tags'           => 'tag'
-		);
+                        foreach ($attribute['options'] as $option_key => $option) {
 
-		foreach ( $fields_to_fix as $parent_field_name => $child_field_name ) {
+                            unset($data['parent']['attributes'][$attribute_key]['options'][$option_key]);
 
-			if ( ! empty( $data[ $parent_field_name ] ) ) {
+                            $data['parent']['attributes'][$attribute_key]['options']['option'][] = array($option);
+                        }
+                    }
+                }
+            }
 
-				foreach ( $data[ $parent_field_name ] as $field_key => $field ) {
+            // fields
+            foreach ($fields_to_fix as $parent_field_name => $child_field_name) {
 
-					unset( $data[ $parent_field_name ][ $field_key ] );
+                if (!empty($data['parent'][$parent_field_name])) {
 
-					$data[ $parent_field_name ][ $child_field_name ][] = array( $field );
-				}
-			}
-		}
+                    foreach ($data['parent'][$parent_field_name] as $field_key => $field) {
 
-		// handle adjusting the parent product for variations
-		if ( ! empty( $data['parent'] ) ) {
+                        unset($data['parent'][$parent_field_name][$field_key]);
 
-			// attributes
-			if ( ! empty( $data['parent']['attributes'] ) ) {
+                        $data['parent'][$parent_field_name][$child_field_name][] = array($field);
+                    }
+                }
+            }
+        }
 
-				foreach ( $data['parent']['attributes'] as $attribute_key => $attribute ) {
-
-					if ( ! empty( $attribute['options'] ) && is_array( $attribute['options'] ) ) {
-
-						foreach ( $attribute['options'] as $option_key => $option ) {
-
-							unset( $data['parent']['attributes'][ $attribute_key ]['options'][ $option_key ] );
-
-							$data['parent']['attributes'][ $attribute_key ]['options']['option'][] = array( $option );
-						}
-					}
-				}
-			}
-
-			// fields
-			foreach ( $fields_to_fix as $parent_field_name => $child_field_name ) {
-
-				if ( ! empty( $data['parent'][ $parent_field_name ] ) ) {
-
-					foreach ( $data['parent'][ $parent_field_name ] as $field_key => $field ) {
-
-						unset( $data['parent'][ $parent_field_name ][ $field_key ] );
-
-						$data['parent'][ $parent_field_name ][ $child_field_name ][] = array( $field );
-					}
-				}
-			}
-		}
-
-		return $data;
-	}
+        return $data;
+    }
 
 }

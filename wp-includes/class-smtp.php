@@ -30,7 +30,6 @@
  * @author   Marcus Bointon <phpmailer@synchromedia.co.uk>
  * @license  http://www.gnu.org/copyleft/lesser.html Distributed under the Lesser General Public License (LGPL)
  */
-
 class SMTP
 {
     /**
@@ -156,11 +155,11 @@ class SMTP
             case 'html':
                 //Cleans up output a bit for a better looking, HTML-safe output
                 echo htmlentities(
-                    preg_replace('/[\r\n]+/', '', $str),
-                    ENT_QUOTES,
-                    'UTF-8'
-                )
-                . "<br>\n";
+                        preg_replace('/[\r\n]+/', '', $str),
+                        ENT_QUOTES,
+                        'UTF-8'
+                    )
+                    . "<br>\n";
                 break;
             case 'echo':
             default:
@@ -171,8 +170,8 @@ class SMTP
 
     /**
      * Connect to an SMTP server.
-     * @param string $host    SMTP server IP or host name
-     * @param int $port    The port number to connect to
+     * @param string $host SMTP server IP or host name
+     * @param int $port The port number to connect to
      * @param int $timeout How long to wait for the connection to open
      * @param array $options An array of options for stream_context_create()
      * @access public
@@ -270,10 +269,10 @@ class SMTP
      * Perform SMTP authentication.
      * Must be run after hello().
      * @see hello()
-     * @param string $username    The user name
-     * @param string $password    The password
-     * @param string $authtype    The auth type (PLAIN, LOGIN, NTLM, CRAM-MD5)
-     * @param string $realm       The auth realm for NTLM
+     * @param string $username The user name
+     * @param string $password The password
+     * @param string $authtype The auth type (PLAIN, LOGIN, NTLM, CRAM-MD5)
+     * @param string $realm The auth realm for NTLM
      * @param string $workstation The auth workstation for NTLM
      * @access public
      * @return bool True if successfully authenticated.
@@ -284,7 +283,8 @@ class SMTP
         $authtype = 'LOGIN',
         $realm = '',
         $workstation = ''
-    ) {
+    )
+    {
         if (empty($authtype)) {
             $authtype = 'LOGIN';
         }
@@ -393,7 +393,7 @@ class SMTP
      * Works like hash_hmac('md5', $data, $key)
      * in case that function is not available
      * @param string $data The data to hash
-     * @param string $key  The key to hash with
+     * @param string $key The key to hash with
      * @access protected
      * @return string
      */
@@ -588,7 +588,7 @@ class SMTP
      * Low-level implementation used by hello()
      * @see hello()
      * @param string $hello The HELO string
-     * @param string $host  The hostname to say we are
+     * @param string $host The hostname to say we are
      * @access protected
      * @return bool
      */
@@ -671,9 +671,9 @@ class SMTP
 
     /**
      * Send a command to an SMTP server and check its return code.
-     * @param string $command       The command name - not sent to the server
+     * @param string $command The command name - not sent to the server
      * @param string $commandstring The actual command to send
-     * @param int|array $expect     One or more expected integer success codes
+     * @param int|array $expect One or more expected integer success codes
      * @access protected
      * @return bool True on success.
      */

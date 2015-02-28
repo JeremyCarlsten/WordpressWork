@@ -30,14 +30,16 @@
 /**
  * Base class for all domain objects.
  */
-class Simplify_Object {
+class Simplify_Object
+{
 
     private $properties = array();
 
     /**
      * @ignore
      */
-    public function __get($key) {
+    public function __get($key)
+    {
         if (array_key_exists($key, $this->properties)) {
             return $this->properties[$key];
         } else {
@@ -48,7 +50,8 @@ class Simplify_Object {
     /**
      * @ignore
      */
-    public function __set($key, $value) {
+    public function __set($key, $value)
+    {
         $this->properties[$key] = $value;
     }
 
@@ -56,7 +59,8 @@ class Simplify_Object {
      * Updates the object's properties with the values in the specified map.
      * @param $hash array Map of values to set.
      */
-    public function setAll($hash) {
+    public function setAll($hash)
+    {
         foreach ($hash as $key => $value) {
             $this->$key = $value;
         }
@@ -65,7 +69,8 @@ class Simplify_Object {
     /**
      * @ignore
      */
-    public function __toString() {
+    public function __toString()
+    {
         return json_encode($this->properties);
     }
 
@@ -73,7 +78,8 @@ class Simplify_Object {
      * Returns the object's properties as a map.
      * @return array map of properties.
      */
-    public function getProperties() {
+    public function getProperties()
+    {
         return $this->properties;
     }
 }

@@ -37,6 +37,7 @@ p {
     float: right;
     padding: 15px
 }
+
 .alignleft {
     float: left;
     padding: 15px
@@ -677,21 +678,21 @@ div#middle .contentheading, div#middle .componentheading, div.weblink-category h
   Clean up section...
 ************************************/
 
-footer{
+footer {
     text-align: center;
     padding: 5px 0;
 }
 
-footer #login a{
+footer #login a {
     color: #c03f04;
     text-decoration: underline;
 }
 
-footer #login a:hover{
+footer #login a:hover {
     text-decoration: none;
 }
 
-.page-content{
+.page-content {
     padding: 0px 40px 0px 10px;
 }
 
@@ -699,6 +700,6 @@ footer #login a:hover{
     width: 90%;
 }
 
-#TA_rated594 #CDSWIDFRR  div{
+#TA_rated594 #CDSWIDFRR div {
     background: none;
 }

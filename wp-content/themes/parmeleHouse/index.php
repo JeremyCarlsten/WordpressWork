@@ -45,10 +45,7 @@
             <div class="padding">
                 <div class="moduletable">
                     <h3>Visitor Menu</h3>
-                    <ul class="menu">
-                        <li class="item-301 current active"><a href="/">Home</a></li>
-                        <li class="item-103"><a href="beds-and-more.html">Beds and More</a></li>
-                    </ul>
+                    <?php wp_nav_menu(array('theme_location' => 'sidebar_menu')); ?>
                 </div>
                 <!--<div class="moduletable">-->
                 <!--<div class="custom">-->

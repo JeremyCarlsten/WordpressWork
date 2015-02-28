@@ -2,45 +2,56 @@
 #submitted-on {
     position: relative;
 }
+
 #the-comment-list .author .akismet-user-comment-count {
     display: inline;
 }
+
 #the-comment-list .author a span {
     text-decoration: none;
     color: #999;
 }
+
 #the-comment-list .author a span.akismet-span-link {
-	text-decoration: inherit;
-	color: inherit;
+    text-decoration: inherit;
+    color: inherit;
 }
+
 #the-comment-list .remove_url {
     margin-left: 3px;
     color: #999;
     padding: 2px 3px 2px 0;
 }
+
 #the-comment-list .remove_url:hover {
     color: #A7301F;
     font-weight: bold;
     padding: 2px 2px 2px 0;
 }
+
 #dashboard_recent_comments .akismet-status {
     display: none;
 }
+
 .akismet-status {
     float: right;
 }
+
 .akismet-status a {
     color: #AAA;
     font-style: italic;
 }
+
 span.comment-link a {
     text-decoration: underline;
 }
+
 span.comment-link:after {
-    content: " "attr(title) " ";
+    content: " " attr(title) " ";
     color: #aaa;
     text-decoration: none;
 }
+
 .mshot-arrow {
     width: 0;
     height: 0;
@@ -51,6 +62,7 @@ span.comment-link:after {
     left: -6px;
     top: 91px;
 }
+
 .mshot-container {
     background: #5C5C5C;
     position: absolute;
@@ -63,6 +75,7 @@ span.comment-link:after {
     border-radius: 6px;
     -webkit-border-radius: 6px;
 }
+
 h2.ak-header {
     padding: 30px;
     background: #649316 url('img/logo-full-2x.png') no-repeat 20px center;
@@ -71,16 +84,18 @@ h2.ak-header {
     text-indent: -9999em;
     margin-right: 10px;
 }
+
 .checkforspam {
     display: inline-block !important;
 }
+
 .checkforspam-spinner {
     display: inline-block;
     margin-top: 7px;
 }
 
 .config-wrap {
-	margin-top: 2em;
+    margin-top: 2em;
     max-width: 700px;
 }
 
@@ -91,81 +106,92 @@ h2.ak-header {
     overflow: hidden;
     padding: 20px;
 }
+
 .activate-option.clicked {
-	background: #649316;
-	color: #fff;
+    background: #649316;
+    color: #fff;
 }
+
 .activate-option.clicked:hover {
-	background: #68802E;
-	color: #fff;
+    background: #68802E;
+    color: #fff;
 }
 
 .activate-option .button.button-secondary {
-	margin: 15px 0;
+    margin: 15px 0;
 }
 
 .activate-option p {
-	margin: 10px 0 10px;
+    margin: 10px 0 10px;
 }
 
 .activate-highlight {
-	background: #fff;
-	padding: 30px;
-	margin-right: 10px;
+    background: #fff;
+    padding: 30px;
+    margin-right: 10px;
 }
 
 .activate-highlight.secondary {
-	background: #ddd;
-	padding: 20px 30px;
+    background: #ddd;
+    padding: 20px 30px;
 }
 
 .activate-highlight h3 {
-	margin: 0 0 0.3em;
+    margin: 0 0 0.3em;
 }
+
 .activate-highlight p {
-	color: #777;
+    color: #777;
 }
+
 .activate-highlight .button-primary {
-	margin-top: 15px;
+    margin-top: 15px;
 }
 
 #akismet-enter-api-key .regular-text {
-	width: 18em;
-	margin-top: 15px;
+    width: 18em;
+    margin-top: 15px;
 }
 
 .right {
-	float: right;
+    float: right;
 }
 
 .alert-text {
-	color: #dd3d36;
+    color: #dd3d36;
 }
+
 .success {
-	color: #649316;
+    color: #649316;
 }
+
 .option-description {
     float: left;
     font-size: 16px;
 }
+
 .option-description span {
     color: #666;
     display: block;
     font-size: 14px;
     margin-top: 5px;
 }
+
 .option-action {
     float: right;
 }
+
 .key-config-link {
     font-size: 14px;
     margin-left: 20px;
 }
+
 .jetpack-account {
     float: left;
     font-size: 18px;
     margin-right: 40px;
 }
+
 .small-heading {
     color: #777;
     display: block;
@@ -174,6 +200,7 @@ h2.ak-header {
     margin-bottom: 5px;
     text-transform: uppercase;
 }
+
 .inline-label {
     background: #ddd;
     border-radius: 3px;
@@ -181,20 +208,23 @@ h2.ak-header {
     padding: 3px 8px;
     text-transform: uppercase;
 }
+
 .inline-label.alert {
     background: #e54747;
     color: #fff;
 }
+
 .jetpack-account .inline-label {
     margin-left: 5px;
 }
+
 .option-action .manual-key {
     margin-top: 7px;
 }
 
 .alert {
-	border: 1px solid #e5e5e5;
-	padding: 0.4em 1em 1.4em 1em;
+    border: 1px solid #e5e5e5;
+    padding: 0.4em 1em 1.4em 1em;
     border-radius: 3px;
     -webkit-border-radius: 3px;
     border-width: 1px;
@@ -202,88 +232,88 @@ h2.ak-header {
 }
 
 .alert h3.key-status {
-	color: #fff;
-	margin: 1em 0 0.5em 0;
+    color: #fff;
+    margin: 1em 0 0.5em 0;
 }
 
 .alert.critical {
-	background-color: #993300;
+    background-color: #993300;
 }
 
 .alert.active {
-	background-color: #649316;
+    background-color: #649316;
 }
 
 .alert p.key-status {
-	font-size: 24px;
+    font-size: 24px;
 }
 
 .alert p.description {
-	color:#fff;
-	font-size: 14px;
+    color: #fff;
+    font-size: 14px;
     margin: 0 0;
-	font-style: normal;
+    font-style: normal;
 }
 
 .alert p.description a,
 .alert p.description a,
 .alert p.description a,
 .alert p.description a {
-	color: #fff;
+    color: #fff;
 }
 
 .new-snapshot {
-	margin-top: 1em;
-	padding: 1em;
-	text-align: center;
+    margin-top: 1em;
+    padding: 1em;
+    text-align: center;
 }
 
 .new-snapshot.stats {
-	background: #fff;
-	border: 1px solid #e5e5e5;
+    background: #fff;
+    border: 1px solid #e5e5e5;
 }
 
 .new-snapshot h3 {
     background: #f5f5f5;
-	color: #888;
-	font-size: 11px;
+    color: #888;
+    font-size: 11px;
     margin: 0;
     padding: 3px;
 }
 
 .new-snapspot ul {
-	font-size: 12px;
-	width: 100%;
+    font-size: 12px;
+    width: 100%;
 }
 
 .new-snapshot ul li {
     color: #999;
-	float: left;
+    float: left;
     font-size: 11px;
-	padding: 0 20px;
+    padding: 0 20px;
     text-transform: uppercase;
-	width: 33%;
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
+    width: 33%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
 }
 
 .new-snapshot.stats ul li:first-child,
 .new-snapshot.stats ul li:nth-child(2) {
-	border-right:1px dotted #ccc;
+    border-right: 1px dotted #ccc;
 }
 
 .new-snapshot.account ul li:nth-child(2) {
-	border-right: none;
+    border-right: none;
 }
 
 .new-snapshot ul li span {
     color: #52accc;
-	display: block;
-	font-size: 32px;
-	font-weight: lighter;
-	line-height: 1.5em;
+    display: block;
+    font-size: 32px;
+    font-weight: lighter;
+    line-height: 1.5em;
 }
 
 .new-snapshot.stats {
@@ -291,71 +321,70 @@ h2.ak-header {
 
 .new-snapshot.account,
 .new-snapshot.settings {
-	float: left;
-	padding: 0;
-	text-align: left;
-	width: 50%;
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
+    float: left;
+    padding: 0;
+    text-align: left;
+    width: 50%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
 }
 
 .account-container {
-	background: #fff;
-	border: 1px solid #e5e5e5;
-	margin-right: 0.5em;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    margin-right: 0.5em;
 }
 
 .settings-container {
-	background: #fff;
-	border: 1px solid #e5e5e5;
-	margin-left: 0.5em;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    margin-left: 0.5em;
 }
 
 .new-snapshot.account ul li {
-	width:100%
+    width: 100%
 }
 
 .new-snapshot.account ul li span {
-	font-size: 14px;
-	font-weight: normal;
+    font-size: 14px;
+    font-weight: normal;
 }
 
-
 .new-snapshot.settings ul li {
-	border: none;
-	display: block;
-	width:100%
+    border: none;
+    display: block;
+    width: 100%
 }
 
 .new-snapshot.settings ul li span {
-	display: block;
-	font-size: 14px;
-	font-weight: normal;
+    display: block;
+    font-size: 14px;
+    font-weight: normal;
 }
 
 .new-snapshot.settings p.submit {
-	margin: 0;
-	text-align: center;
+    margin: 0;
+    text-align: center;
 }
 
 .akismet-settings th.strictness {
-	vertical-align: top;
-	padding-top: 15px;
+    vertical-align: top;
+    padding-top: 15px;
 }
 
 .akismet-settings input[type=text] {
-	width: 75%;
+    width: 75%;
 }
 
-.akismet-settings span.note{
-	float: left;
-	padding-left: 23px;
-	font-size: 75%;
-	margin-top: -10px;
+.akismet-settings span.note {
+    float: left;
+    padding-left: 23px;
+    font-size: 75%;
+    margin-top: -10px;
 }
 
 .clearfix {
-	clear:both;
+    clear: both;
 }
