@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright (c) 2013, 2014 MasterCard International Incorporated
  * All rights reserved.
@@ -28,8 +27,7 @@
  */
 
 
-class Simplify_Subscription extends Simplify_Object
-{
+class Simplify_Subscription extends Simplify_Object {
     /**
      * Creates an Simplify_Subscription object
      * @param     array $hash a map of parameters; valid keys are:<dl style="padding-left:10px;">
@@ -44,8 +42,7 @@ class Simplify_Subscription extends Simplify_Object
      * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.<i/>
      * @return    Subscription a Subscription object.
      */
-    static public function createSubscription($hash, $authentication = null)
-    {
+    static public function createSubscription($hash, $authentication = null) {
 
         $args = func_get_args();
         $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
@@ -58,101 +55,98 @@ class Simplify_Subscription extends Simplify_Object
     }
 
 
-    /**
-     * Deletes an Simplify_Subscription object.
-     *
-     * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
-     */
-    public function deleteSubscription($authentication = null)
-    {
-
-        $args = func_get_args();
-        $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 1);
-
-        $obj = Simplify_PaymentsApi::deleteObject($this, $authentication);
-        $this->properties = null;
-        return true;
-    }
 
 
-    /**
-     * Retrieve Simplify_Subscription objects.
-     * @param     array criteria a map of parameters; valid keys are:<dl style="padding-left:10px;">
-     *     <dt><tt>filter</tt></dt>    <dd>Filters to apply to the list.  </dd>
-     *     <dt><tt>max</tt></dt>    <dd>Allows up to a max of 50 list items to return. [max value: 50, default: 20]  </dd>
-     *     <dt><tt>offset</tt></dt>    <dd>Used in paging of the list.  This is the start offset of the page. [default: 0]  </dd>
-     *     <dt><tt>sorting</tt></dt>    <dd>Allows for ascending or descending sorting of the list.  The value maps properties to the sort direction (either <tt>asc</tt> for ascending or <tt>desc</tt> for descending).  Sortable properties are: <tt> id</tt><tt> plan</tt>.</dd></dl>
-     * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
-     * @return    Simplify_ResourceList a ResourceList object that holds the list of Subscription objects and the total
-     *            number of Subscription objects available for the given criteria.
-     * @see       ResourceList
-     */
-    static public function listSubscription($criteria = null, $authentication = null)
-    {
+       /**
+        * Deletes an Simplify_Subscription object.
+        *
+        * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
+        */
+        public function deleteSubscription($authentication = null) {
 
-        $args = func_get_args();
-        $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
+            $args = func_get_args();
+            $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 1);
 
-        $val = new Simplify_Subscription();
-        $list = Simplify_PaymentsApi::listObject($val, $criteria, $authentication);
-
-        return $list;
-    }
+            $obj = Simplify_PaymentsApi::deleteObject($this, $authentication);
+            $this->properties = null;
+            return true;
+        }
 
 
-    /**
-     * Retrieve a Simplify_Subscription object from the API
-     *
-     * @param     string id  the id of the Subscription object to retrieve
-     * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
-     * @return    Subscription a Subscription object
-     */
-    static public function findSubscription($id, $authentication = null)
-    {
+       /**
+        * Retrieve Simplify_Subscription objects.
+        * @param     array criteria a map of parameters; valid keys are:<dl style="padding-left:10px;">
+        *     <dt><tt>filter</tt></dt>    <dd>Filters to apply to the list.  </dd>
+        *     <dt><tt>max</tt></dt>    <dd>Allows up to a max of 50 list items to return. [max value: 50, default: 20]  </dd>
+        *     <dt><tt>offset</tt></dt>    <dd>Used in paging of the list.  This is the start offset of the page. [default: 0]  </dd>
+        *     <dt><tt>sorting</tt></dt>    <dd>Allows for ascending or descending sorting of the list.  The value maps properties to the sort direction (either <tt>asc</tt> for ascending or <tt>desc</tt> for descending).  Sortable properties are: <tt> id</tt><tt> plan</tt>.</dd></dl>
+        * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
+        * @return    Simplify_ResourceList a ResourceList object that holds the list of Subscription objects and the total
+        *            number of Subscription objects available for the given criteria.
+        * @see       ResourceList
+        */
+        static public function listSubscription($criteria = null, $authentication = null) {
 
-        $args = func_get_args();
-        $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
+            $args = func_get_args();
+            $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
 
-        $val = new Simplify_Subscription();
-        $val->id = $id;
+            $val = new Simplify_Subscription();
+            $list = Simplify_PaymentsApi::listObject($val, $criteria, $authentication);
 
-        $obj = Simplify_PaymentsApi::findObject($val, $authentication);
-
-        return $obj;
-    }
+            return $list;
+        }
 
 
-    /**
-     * Updates an Simplify_Subscription object.
-     *
-     * The properties that can be updated:
-     * <dl style="padding-left:10px;">
-     *     <dt><tt>amount</tt></dt>    <dd>Amount of the payment (minor units). Example: 1000 = 10.00 [min value: 50, max value: 99999999] </dd>
-     *     <dt><tt>coupon</tt></dt>    <dd>Coupon being assigned to this subscription </dd>
-     *     <dt><tt>currency</tt></dt>    <dd>Currency code (ISO-4217). Must match the currency associated with your account. [default: USD] </dd>
-     *     <dt><tt>frequency</tt></dt>    <dd>Frequency of payment for the plan. Example: Monthly </dd>
-     *     <dt><tt>name</tt></dt>    <dd>Name describing subscription </dd>
-     *     <dt><tt>plan</tt></dt>    <dd>Plan that should be used for the subscription. </dd>
-     *     <dt><tt>prorate</tt></dt>    <dd>Whether to prorate existing subscription. [default: true] <strong>required </strong></dd>
-     *     <dt><tt>quantity</tt></dt>    <dd>Quantity of the plan for the subscription. [min value: 1] </dd></dl>
-     * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
-     * @return    Subscription a Subscription object.
-     */
-    public function updateSubscription($authentication = null)
-    {
+        /**
+         * Retrieve a Simplify_Subscription object from the API
+         *
+         * @param     string id  the id of the Subscription object to retrieve
+         * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
+         * @return    Subscription a Subscription object
+         */
+        static public function findSubscription($id, $authentication = null) {
 
-        $args = func_get_args();
-        $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 1);
+            $args = func_get_args();
+            $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
 
-        $object = Simplify_PaymentsApi::updateObject($this, $authentication);
-        return $object;
-    }
+            $val = new Simplify_Subscription();
+            $val->id = $id;
+
+            $obj = Simplify_PaymentsApi::findObject($val, $authentication);
+
+            return $obj;
+        }
+
+
+        /**
+         * Updates an Simplify_Subscription object.
+         *
+         * The properties that can be updated:
+         * <dl style="padding-left:10px;">
+         *     <dt><tt>amount</tt></dt>    <dd>Amount of the payment (minor units). Example: 1000 = 10.00 [min value: 50, max value: 99999999] </dd>
+         *     <dt><tt>coupon</tt></dt>    <dd>Coupon being assigned to this subscription </dd>
+         *     <dt><tt>currency</tt></dt>    <dd>Currency code (ISO-4217). Must match the currency associated with your account. [default: USD] </dd>
+         *     <dt><tt>frequency</tt></dt>    <dd>Frequency of payment for the plan. Example: Monthly </dd>
+         *     <dt><tt>name</tt></dt>    <dd>Name describing subscription </dd>
+         *     <dt><tt>plan</tt></dt>    <dd>Plan that should be used for the subscription. </dd>
+         *     <dt><tt>prorate</tt></dt>    <dd>Whether to prorate existing subscription. [default: true] <strong>required </strong></dd>
+         *     <dt><tt>quantity</tt></dt>    <dd>Quantity of the plan for the subscription. [min value: 1] </dd></dl>
+         * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
+         * @return    Subscription a Subscription object.
+         */
+        public function updateSubscription($authentication = null)  {
+
+            $args = func_get_args();
+            $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 1);
+
+            $object = Simplify_PaymentsApi::updateObject($this, $authentication);
+            return $object;
+        }
 
     /**
      * @ignore
      */
-    public function getClazz()
-    {
+    public function getClazz() {
         return "Subscription";
     }
 }

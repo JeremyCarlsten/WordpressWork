@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright (c) 2013, 2014 MasterCard International Incorporated
  * All rights reserved.
@@ -28,8 +27,7 @@
  */
 
 
-class Simplify_Event extends Simplify_Object
-{
+class Simplify_Event extends Simplify_Object {
 
     /**
      * Creates an Event object
@@ -41,8 +39,7 @@ class Simplify_Event extends Simplify_Object
      * @return Payments_Event an Event object.
      * @throws InvalidArgumentException
      */
-    static public function createEvent($hash, $authentication = null)
-    {
+    static public function createEvent($hash, $authentication = null) {
 
         $args = func_get_args();
         $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
@@ -53,16 +50,15 @@ class Simplify_Event extends Simplify_Object
 
         if ($jsonObject['event'] == null) {
             throw new InvalidArgumentException("Incorect data in webhook event");
-        }
+        }   
 
-        return $paymentsApi->convertFromHashToObject($jsonObject['event'], self::getClazz());
+        return  $paymentsApi->convertFromHashToObject($jsonObject['event'], self::getClazz());
     }
 
     /**
      * @ignore
      */
-    static public function getClazz()
-    {
+    static public function getClazz() {
         return "Event";
     }
 }

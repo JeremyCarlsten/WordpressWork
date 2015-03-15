@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright (c) 2013, 2014 MasterCard International Incorporated
  * All rights reserved.
@@ -75,8 +74,7 @@ class Simplify_PaymentsApi
      * @ignore
      * @param Simplify_Authentication $authentication
      */
-    static public function updateObject($object, $authentication = null)
-    {
+    static public function updateObject($object, $authentication = null) {
         $paymentsApi = new Simplify_PaymentsApi();
 
         $jsonObject = $paymentsApi->execute("update", $object, $authentication);
@@ -89,8 +87,7 @@ class Simplify_PaymentsApi
      * @ignore
      * @param Simplify_Authentication $authentication
      */
-    static public function deleteObject($object, $authentication = null)
-    {
+    static public function deleteObject($object, $authentication = null) {
         $paymentsApi = new Simplify_PaymentsApi();
 
         $jsonObject = $paymentsApi->execute("delete", $object, $authentication);
@@ -102,8 +99,7 @@ class Simplify_PaymentsApi
      * @ignore
      * @param Simplify_Authentication $authentication
      */
-    static public function listObject($object, $criteria = null, $authentication = null)
-    {
+    static public function listObject($object, $criteria = null, $authentication =null) {
         if ($criteria != null) {
             if (isset($criteria['max'])) {
                 $object->max = $criteria['max'];
@@ -180,7 +176,7 @@ class Simplify_PaymentsApi
             $queryParams = array_merge($queryParams, array('max' => $object->max, 'offset' => $object->offset));
             if (is_array($object->filter) && count(array_keys($object->filter))) {
                 foreach ($object->filter as $key => $value) {
-                    $queryParams["filter[$key]"] = $value;
+		    $queryParams["filter[$key]"] = $value;
                 }
             }
             if (is_array($object->sorting) && count(array_keys($object->sorting))) {
@@ -255,8 +251,7 @@ class Simplify_PaymentsApi
     /**
      * @ignore
      */
-    private function isLiveKey($k)
-    {
+    private function isLiveKey($k) {
         return strpos($k, "lvpb") === 0;
     }
 
@@ -281,22 +276,21 @@ class Simplify_PaymentsApi
      * @param integer $expectedArgCount
      * @return Simplify_Authentication
      */
-    static function buildAuthenticationObject($authentication = null, $args, $expectedArgCount)
-    {
+    static function buildAuthenticationObject($authentication = null, $args, $expectedArgCount){
 
-        if (sizeof($args) > $expectedArgCount) {
-            $authentication = new Simplify_Authentication($args[$expectedArgCount - 1], $args[$expectedArgCount]);
+        if(sizeof($args) > $expectedArgCount) {
+            $authentication = new Simplify_Authentication($args[$expectedArgCount-1], $args[$expectedArgCount]);
         }
 
-        if ($authentication == null) {
+        if ($authentication == null){
             $authentication = new Simplify_Authentication();
         }
 
         // check that the keys have been set, if not use the global keys
-        if (empty($authentication->publicKey)) {
+        if ( empty($authentication->publicKey)){
             $authentication->publicKey = Simplify::$publicKey;
         }
-        if (empty($authentication->privateKey)) {
+        if ( empty($authentication->privateKey)){
             $authentication->privateKey = Simplify::$privateKey;
         }
 

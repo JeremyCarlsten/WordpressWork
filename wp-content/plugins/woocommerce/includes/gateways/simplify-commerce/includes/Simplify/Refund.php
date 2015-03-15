@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright (c) 2013, 2014 MasterCard International Incorporated
  * All rights reserved.
@@ -28,8 +27,7 @@
  */
 
 
-class Simplify_Refund extends Simplify_Object
-{
+class Simplify_Refund extends Simplify_Object {
     /**
      * Creates an Simplify_Refund object
      * @param     array $hash a map of parameters; valid keys are:<dl style="padding-left:10px;">
@@ -40,8 +38,7 @@ class Simplify_Refund extends Simplify_Object
      * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.<i/>
      * @return    Refund a Refund object.
      */
-    static public function createRefund($hash, $authentication = null)
-    {
+    static public function createRefund($hash, $authentication = null) {
 
         $args = func_get_args();
         $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
@@ -54,57 +51,55 @@ class Simplify_Refund extends Simplify_Object
     }
 
 
-    /**
-     * Retrieve Simplify_Refund objects.
-     * @param     array criteria a map of parameters; valid keys are:<dl style="padding-left:10px;">
-     *     <dt><tt>filter</tt></dt>    <dd>Filters to apply to the list.  </dd>
-     *     <dt><tt>max</tt></dt>    <dd>Allows up to a max of 50 list items to return. [max value: 50, default: 20]  </dd>
-     *     <dt><tt>offset</tt></dt>    <dd>Used in paging of the list.  This is the start offset of the page. [default: 0]  </dd>
-     *     <dt><tt>sorting</tt></dt>    <dd>Allows for ascending or descending sorting of the list.  The value maps properties to the sort direction (either <tt>asc</tt> for ascending or <tt>desc</tt> for descending).  Sortable properties are: <tt> id</tt><tt> amount</tt><tt> description</tt><tt> dateCreated</tt><tt> paymentDate</tt>.</dd></dl>
-     * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
-     * @return    Simplify_ResourceList a ResourceList object that holds the list of Refund objects and the total
-     *            number of Refund objects available for the given criteria.
-     * @see       ResourceList
-     */
-    static public function listRefund($criteria = null, $authentication = null)
-    {
 
-        $args = func_get_args();
-        $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
+       /**
+        * Retrieve Simplify_Refund objects.
+        * @param     array criteria a map of parameters; valid keys are:<dl style="padding-left:10px;">
+        *     <dt><tt>filter</tt></dt>    <dd>Filters to apply to the list.  </dd>
+        *     <dt><tt>max</tt></dt>    <dd>Allows up to a max of 50 list items to return. [max value: 50, default: 20]  </dd>
+        *     <dt><tt>offset</tt></dt>    <dd>Used in paging of the list.  This is the start offset of the page. [default: 0]  </dd>
+        *     <dt><tt>sorting</tt></dt>    <dd>Allows for ascending or descending sorting of the list.  The value maps properties to the sort direction (either <tt>asc</tt> for ascending or <tt>desc</tt> for descending).  Sortable properties are: <tt> id</tt><tt> amount</tt><tt> description</tt><tt> dateCreated</tt><tt> paymentDate</tt>.</dd></dl>
+        * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
+        * @return    Simplify_ResourceList a ResourceList object that holds the list of Refund objects and the total
+        *            number of Refund objects available for the given criteria.
+        * @see       ResourceList
+        */
+        static public function listRefund($criteria = null, $authentication = null) {
 
-        $val = new Simplify_Refund();
-        $list = Simplify_PaymentsApi::listObject($val, $criteria, $authentication);
+            $args = func_get_args();
+            $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
 
-        return $list;
-    }
+            $val = new Simplify_Refund();
+            $list = Simplify_PaymentsApi::listObject($val, $criteria, $authentication);
+
+            return $list;
+        }
 
 
-    /**
-     * Retrieve a Simplify_Refund object from the API
-     *
-     * @param     string id  the id of the Refund object to retrieve
-     * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
-     * @return    Refund a Refund object
-     */
-    static public function findRefund($id, $authentication = null)
-    {
+        /**
+         * Retrieve a Simplify_Refund object from the API
+         *
+         * @param     string id  the id of the Refund object to retrieve
+         * @param     $authentication -  information used for the API call.  If no value is passed the global keys Simplify::public_key and Simplify::private_key are used.  <i>For backwards compatibility the public and private keys may be passed instead of the authentication object.</i>
+         * @return    Refund a Refund object
+         */
+        static public function findRefund($id, $authentication = null) {
 
-        $args = func_get_args();
-        $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
+            $args = func_get_args();
+            $authentication = Simplify_PaymentsApi::buildAuthenticationObject($authentication, $args, 2);
 
-        $val = new Simplify_Refund();
-        $val->id = $id;
+            $val = new Simplify_Refund();
+            $val->id = $id;
 
-        $obj = Simplify_PaymentsApi::findObject($val, $authentication);
+            $obj = Simplify_PaymentsApi::findObject($val, $authentication);
 
-        return $obj;
-    }
+            return $obj;
+        }
 
     /**
      * @ignore
      */
-    public function getClazz()
-    {
+    public function getClazz() {
         return "Refund";
     }
 }

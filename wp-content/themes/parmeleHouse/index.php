@@ -58,17 +58,20 @@
                 <!--src="images/online_booking.png" style="border: 0px; "/></a></p>-->
                 <!--</div>-->
                 <!--</div>-->
+<!--                <div class="moduletable">-->
+<!--                    <ul class="menu" id="more_info">-->
+<!--                        <li class="item-105"><a href="/check-in-times-policies">Check-in Times / Policies</a></li>-->
+<!--                        <li class="item-114"><a href="/the-photo-tour">The Photo Tour</a></li>-->
+<!--                        <li class="item-124"><a-->
+<!--                                class="background: url(../../rt_fire/images_forestfire/fr_title.png) 0 0 no-repeat; font-size: 150%; color: #D60000;"-->
+<!--                                href="/contact-us">Contact Us</a></li>-->
+<!--                        <li class="item-125"><a href="/map-and-directions">Map and Directions</a></li>-->
+<!--                        <li class="item-126"><a href="/area-info-links">Area Info Links</a></li>-->
+<!--                    </ul>-->
+<!--                </div>-->
                 <div class="moduletable">
                     <h3>More Information</h3>
-                    <ul class="menu" id="more_info">
-                        <li class="item-105"><a href="/check-in-times-policies">Check-in Times / Policies</a></li>
-                        <li class="item-114"><a href="/the-photo-tour">The Photo Tour</a></li>
-                        <li class="item-124"><a
-                                class="background: url(../../rt_fire/images_forestfire/fr_title.png) 0 0 no-repeat; font-size: 150%; color: #D60000;"
-                                href="/contact-us">Contact Us</a></li>
-                        <li class="item-125"><a href="/map-and-directions">Map and Directions</a></li>
-                        <li class="item-126"><a href="/area-info-links">Area Info Links</a></li>
-                    </ul>
+                    <?php wp_nav_menu(array('theme_location' => 'sidebar_sub_menu')); ?>
                 </div>
                 <div class="moduletable">
                     <div id="TA_rated594" class="TA_rated">

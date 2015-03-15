@@ -42,41 +42,36 @@
  * <p>
  * <code>new Simplify_Authentication($publicKey, $privateKey, $accessToken)</code>
  */
-class Simplify_Authentication
-{
+class Simplify_Authentication {
 
     public $privateKey;
     public $publicKey;
     public $accessToken;
 
-    function __construct()
-    {
+    function __construct() {
         $args = func_get_args();
-        switch (func_num_args()) {
+        switch( func_num_args() ) {
             case 1:
-                self::__construct1($args[0]);
+                self::__construct1( $args[0] );
                 break;
             case 2:
-                self::__construct2($args[0], $args[1]);
+                self::__construct2( $args[0], $args[1] );
                 break;
             case 3:
-                self::__construct3($args[0], $args[1], $args[2]);
+                self::__construct3( $args[0], $args[1], $args[2] );
         }
     }
 
-    function __construct1($accessToken)
-    {
+    function __construct1($accessToken) {
         $this->accessToken = $accessToken;
     }
 
-    function __construct2($publicKey, $privateKey)
-    {
+    function __construct2($publicKey, $privateKey) {
         $this->publicKey = $publicKey;
         $this->privateKey = $privateKey;
     }
 
-    function __construct3($publicKey, $privateKey, $accessToken)
-    {
+    function __construct3($publicKey, $privateKey, $accessToken) {
         $this->publicKey = $publicKey;
         $this->privateKey = $privateKey;
         $this->accessToken = $accessToken;

@@ -601,11 +601,12 @@ ul.latestnews li {
     width: 10px;
 }
 
-#more_info li {
+#menu-more-information li {
+    width: 107%;
     background: url('css/images/fr_menu.png') 100% 0 no-repeat !important;
 }
 
-#more_info a {
+#menu-more-information a {
     height: 20px !important;
     line-height: 20px !important;
     margin: 0 0 0 -20px;
@@ -634,7 +635,7 @@ ul.latestnews li {
     width: 480px;
 }
 
-body.f_smaller, #more_info {
+body.f_smaller, #menu-more-information {
     font-size: 11px;
 }
 
